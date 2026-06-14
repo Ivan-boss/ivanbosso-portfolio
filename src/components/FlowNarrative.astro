@@ -1,0 +1,57 @@
+---
+import { FLOW } from '../data/projects';
+interface Props { intro?: boolean }
+const { intro = false } = Astro.props;
+// délai de base : laisse le hero se révéler avant d'allumer le fil
+const base = intro ? 1.5 : 0;
+---
+
+<!-- Le fil conducteur : du problème à la valeur -->
+<div class="relative mx-auto max-w-3xl">
+  <!-- balayage lumineux qui traverse tout le fil une fois à l'arrivée -->
+  {
+    intro && (
+      <span
+        class="pointer-events-none absolute top-[6px] z-10 h-2 w-16 -translate-y-1/2 rounded-full bg-citron blur-[2px]"
+        style={`animation: sweep 1.8s cubic-bezier(.4,0,.2,1) ${base}s 1 both; box-shadow:0 0 16px 4px rgba(63,185,132,.7)`}
+      />
+    )
+  }
+
+  <div class="flex items-center justify-between gap-2">
+    {
+      FLOW.map((stage, i) => (
+        <>
+          <div class="flex flex-col items-center gap-2">
+            <span
+              class:list={['grid h-3 w-3 place-items-center rounded-full bg-accent-bright', intro && 'anim']}
+              style={
+                intro
+                  ? `animation: pop-in .5s cubic-bezier(.22,1,.36,1) ${base + i * 0.18}s both, node-glow 3s ease-in-out ${base + 1 + i * 0.4}s infinite`
+                  : `animation: node-glow 3s ease-in-out ${i * 0.4}s infinite`
+              }
+            />
+            <span
+              class:list={[
+                'font-mono text-[11px] uppercase tracking-wider sm:text-xs',
+                i === FLOW.length - 1 ? 'text-citron' : 'text-muted',
+                intro && 'anim',
+              ]}
+              style={intro ? `animation: clip-up .6s cubic-bezier(.22,1,.36,1) ${base + i * 0.18}s both` : ''}
+            >
+              {stage.label}
+            </span>
+          </div>
+          {i < FLOW.length - 1 && (
+            <div class="relative h-px flex-1 overflow-hidden bg-line">
+              <span
+                class="absolute top-1/2 h-px w-8 -translate-y-1/2 bg-gradient-to-r from-transparent via-accent-bright to-transparent"
+                style={`animation: pulse-travel 3.2s linear ${base + 1.5 + i * 0.5}s infinite`}
+              />
+            </div>
+          )}
+        </>
+      ))
+    }
+  </div>
+</div>

@@ -1,0 +1,214 @@
+---
+import Base from '../layouts/Base.astro';
+import NeuralBg from '../components/NeuralBg.tsx';
+import FlowNarrative from '../components/FlowNarrative.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import TechStack from '../components/TechStack.astro';
+import CodeCard from '../components/CodeCard.astro';
+import { PROJECTS } from '../data/projects';
+import { SITE } from '../config/site';
+
+const featured = PROJECTS.filter((p) => p.featured);
+
+// Piliers GÉNÉRIQUES et intemporels (pas de chiffre lié à un projet précis)
+const pillars = [
+  { k: 'En production', v: 'Des solutions qui tournent vraiment, pas des prototypes.', c: 'accent-bright' },
+  { k: 'Mesuré', v: 'Des résultats chiffrés et évalués, pas du « ça marche ».', c: 'citron' },
+  { k: 'De bout en bout', v: 'De la première idée jusqu’au déploiement.', c: 'accent-bright' },
+  { k: 'Multi-secteurs', v: 'Industrie, paie, assurance, immobilier social…', c: 'citron' },
+];
+
+// Pourquoi travailler avec moi
+const why = [
+  { icon: '🚀', title: 'Je vais jusqu’à la production', desc: 'Beaucoup s’arrêtent au prototype. Je livre des solutions qui tournent, pour de vrais utilisateurs.', c: 'accent-bright' },
+  { icon: '🎯', title: 'Je pars du besoin, pas de la techno', desc: 'La technologie au service de la valeur métier, jamais l’inverse.', c: 'citron' },
+  { icon: '📊', title: 'Je mesure ce que je livre', desc: 'Vous savez ce que ça vaut et ce que ça rapporte, pas seulement que « ça marche ».', c: 'accent-bright' },
+  { icon: '🧩', title: 'Polyvalent, de la donnée à l’écran', desc: 'Données, modèles, back-end, interface : je couvre toute la chaîne.', c: 'citron' },
+];
+
+// maps couleur → classes littérales (pour que Tailwind les génère)
+const BG: Record<string, string> = { 'accent-bright': 'bg-accent-bright', citron: 'bg-citron' };
+const TXT: Record<string, string> = { 'accent-bright': 'text-accent-bright', citron: 'text-citron' };
+const SOFT: Record<string, string> = {
+  'accent-bright': 'bg-accent-bright/10 text-accent-bright',
+  citron: 'bg-citron/15 text-citron',
+};
+---
+
+<Base>
+  <!-- ░░ HERO ░░ -->
+  <section class="relative overflow-hidden">
+    <!-- Aurore respirante -->
+    <div class="pointer-events-none absolute inset-0 -z-20 overflow-hidden">
+      <div class="aurora-blob h-[40rem] w-[40rem] bg-accent-bright" style="top:-12rem;left:-6rem;animation:aurora 16s ease-in-out infinite"></div>
+      <div class="aurora-blob h-[34rem] w-[34rem] bg-citron" style="bottom:-14rem;right:-4rem;animation:aurora 22s ease-in-out infinite reverse;opacity:0.16"></div>
+    </div>
+    <!-- Réseau de neurones -->
+    <div class="absolute inset-0 -z-10" data-parallax="0.15">
+      <NeuralBg client:load />
+    </div>
+
+    <div class="wrap relative flex flex-col items-center py-24 text-center sm:py-32" data-hero>
+      <!-- Photo de profil -->
+      <div class="mb-7 overflow-visible" data-hero-el>
+        {
+          SITE.photo ? (
+            <img
+              src={SITE.photo}
+              alt={SITE.name}
+              width="88"
+              height="88"
+              class="h-22 w-22 rounded-full border-2 border-accent-bright/50 object-cover shadow-lg shadow-accent/20"
+              style="width:88px;height:88px;animation:float-y 6s ease-in-out infinite"
+            />
+          ) : (
+            <span
+              class="grid h-22 w-22 place-items-center rounded-full border-2 border-accent-bright/50 bg-surface font-mono text-2xl font-bold text-fg shadow-lg shadow-accent/20"
+              style="width:88px;height:88px;animation:float-y 6s ease-in-out infinite"
+              title="Ajoutez votre photo : SITE.photo dans src/config/site.ts"
+            >
+              IB
+            </span>
+          )
+        }
+      </div>
+
+      <p class="mb-4 font-mono text-xs uppercase tracking-[0.3em] text-muted" data-hero-el>
+        Bonjour, je suis
+      </p>
+      <h1 class="text-5xl font-black leading-[0.95] tracking-tight sm:text-7xl" data-hero-el>
+        Ivan Bosso
+      </h1>
+      <p class="mt-4 flex h-9 items-center justify-center text-2xl font-bold sm:h-11 sm:text-4xl" data-hero-el>
+        <span data-roles class="role-rotator font-mono"></span>
+      </p>
+      <p class="mt-7 max-w-3xl text-xl font-semibold leading-snug sm:text-2xl" data-hero-el>
+        Je transforme un <span class="text-accent-bright">problème métier</span> en
+        <span class="accent-word">valeur mesurée</span>.
+      </p>
+      <p class="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg" data-hero-el>
+        J'aide les entreprises à transformer une idée en un produit
+        <strong class="font-semibold text-fg">data ou IA réellement en production</strong> : utile, fiable et mesuré.
+        De la première intuition jusqu'au déploiement, avec une seule obsession, la valeur livrée.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-3" data-hero-el>
+        <a
+          href="/portfolio"
+          class="group relative overflow-hidden rounded-md bg-accent px-6 py-3 font-semibold text-white transition-all hover:bg-accent-bright hover:shadow-lg hover:shadow-accent/30"
+          >Voir mes projets</a
+        >
+        <a
+          href="/cv"
+          class="rounded-md border border-line px-6 py-3 font-semibold text-fg transition-colors hover:border-accent-bright hover:text-accent-bright"
+          >Télécharger mon CV</a
+        >
+      </div>
+
+      <!-- Le fil conducteur -->
+      <div class="mt-16 w-full" data-hero-el>
+        <FlowNarrative intro={true} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ PILIERS (générique, intemporel) ░░ -->
+  <section class="wrap -mt-6">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        pillars.map((p, i) => (
+          <div
+            class="anim rounded-xl border border-line/70 bg-surface/40 p-5 transition-colors hover:border-accent-bright/50"
+            style={`animation-delay:${1.5 + i * 0.12}s`}
+          >
+            <span class:list={['block h-1 w-9 rounded-full', BG[p.c]]} />
+            <p class="mt-3 text-lg font-bold text-fg">{p.k}</p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">{p.v}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ░░ PROJETS ░░ -->
+  <section class="wrap mt-24">
+    <div class="reveal flex items-end justify-between">
+      <div>
+        <h2 class="text-2xl font-bold sm:text-3xl">Projets phares</h2>
+        <p class="mt-2 text-muted">Du problème métier à la valeur livrée, projet par projet.</p>
+      </div>
+      <a href="/portfolio" class="hidden text-sm text-accent-bright hover:underline sm:block">Tout voir →</a>
+    </div>
+
+    <div class="mt-8 grid gap-5 sm:grid-cols-2">
+      {featured.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  <!-- ░░ POURQUOI MOI ░░ -->
+  <section class="wrap mt-28">
+    <div class="reveal">
+      <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">// Pourquoi moi</p>
+      <h2 class="mt-3 text-2xl font-bold sm:text-3xl">Pourquoi travailler avec moi&nbsp;?</h2>
+    </div>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2">
+      {
+        why.map((w) => (
+          <div class="reveal flex gap-4 rounded-xl border border-line/70 bg-surface/40 p-6 transition-colors hover:border-accent-bright/40">
+            <span class:list={['grid h-12 w-12 shrink-0 place-items-center rounded-lg text-2xl', SOFT[w.c]]}>{w.icon}</span>
+            <div>
+              <h3 class:list={['text-lg font-bold', TXT[w.c]]}>{w.title}</h3>
+              <p class="mt-1.5 text-sm leading-relaxed text-muted">{w.desc}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ░░ EN QUELQUES LIGNES (code Shiki) ░░ -->
+  <CodeCard />
+
+  <!-- ░░ STACK TECHNIQUE ░░ -->
+  <TechStack />
+
+  <!-- ░░ BANDEAU « MOTS SUR IMAGE » (citation) ░░ -->
+  <section class="relative mt-28 flex min-h-[60vh] items-center overflow-hidden py-20 sm:py-28">
+    <!-- fond : vraie image si fournie, sinon mesh dégradé généré -->
+    {
+      SITE.bandImage ? (
+        <div
+          class="absolute inset-0 -z-20 bg-cover bg-center"
+          style={`background-image:url('${SITE.bandImage}')`}
+          data-parallax="0.08"
+        />
+      ) : (
+        <div class="mesh-bg absolute inset-0 -z-20" data-parallax="0.08" />
+      )
+    }
+    <!-- overlay lisibilité (technique tamalsen) -->
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-base/70 via-base/55 to-base/85"></div>
+
+    <div class="wrap">
+      <p class="reveal mx-auto max-w-4xl text-center text-2xl font-bold leading-snug tracking-tight sm:text-[2.7rem] sm:leading-[1.2]">
+        <span class="quote-grad">« La valeur n'est pas dans l'appel au modèle, mais dans tout ce qui le rend fiable, mesuré et reproductible. »</span>
+      </p>
+      <p class="reveal mt-7 text-center font-mono text-sm text-muted">Ivan Bosso, ma façon de travailler</p>
+    </div>
+  </section>
+
+  <!-- ░░ CTA FINAL ░░ -->
+  <section class="wrap mt-24">
+    <div
+      class="reveal relative overflow-hidden rounded-2xl border border-line/70 bg-gradient-to-br from-surface to-base p-10 text-center sm:p-14"
+    >
+      <h2 class="text-2xl font-bold sm:text-3xl">Un problème data ou IA à mettre en production ?</h2>
+      <p class="mx-auto mt-3 max-w-xl text-muted">Discutons-en. Du POC à la mise en production, avec des résultats mesurés.</p>
+      <a
+        href="/contact"
+        class="mt-7 inline-block rounded-md bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-bright"
+        >Me contacter</a
+      >
+    </div>
+  </section>
+</Base>

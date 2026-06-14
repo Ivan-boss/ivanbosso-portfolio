@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { PROJECTS, SECONDARY } from '../../data/projects';
+---
+
+<Base title="Portfolio · Ivan Bosso" description="Études de cas data & IA d'Ivan Bosso : extraction documentaire par LLM, classification à l'échelle, NLP non supervisé, scoring multi-sources. Des missions réelles, du problème métier à la valeur livrée.">
+  <section class="wrap pt-16 sm:pt-20">
+    <p class="reveal font-mono text-sm text-accent-bright">// Portfolio</p>
+    <h1 class="reveal mt-3 text-3xl font-black tracking-tight sm:text-5xl">Études de cas</h1>
+    <p class="reveal mt-4 max-w-2xl text-lg text-muted">
+      Des missions réelles, menées chez IOD Solutions. Chacune suit le même fil : un problème métier, des contraintes,
+      une approche, un résultat mesuré.
+    </p>
+  </section>
+
+  <section class="wrap mt-12">
+    <div class="grid gap-5 sm:grid-cols-2">
+      {PROJECTS.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  <!-- Secondaires -->
+  <section class="wrap mt-20">
+    <h2 class="reveal text-xl font-bold">Autres missions</h2>
+    <p class="reveal mt-1 text-sm text-muted">Polyvalence : du RAG à l'intégration de données et à l'automatisation.</p>
+    <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        SECONDARY.map((s) => (
+          <div class="reveal rounded-lg border border-line/60 bg-surface/30 p-5">
+            <div class="flex items-center justify-between">
+              <p class="font-semibold text-fg">{s.client}</p>
+              <div class="flex gap-1.5">
+                {s.tags.map((t) => (
+                  <span class="rounded-full bg-base px-2 py-0.5 font-mono text-[10px] text-muted">{t}</span>
+                ))}
+              </div>
+            </div>
+            <p class="mt-2 text-sm leading-relaxed text-muted">{s.task}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Base>

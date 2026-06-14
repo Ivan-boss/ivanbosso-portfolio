@@ -1,0 +1,44 @@
+---
+const links = [
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/cv', label: 'CV' },
+  { href: '/services', label: 'Services' },
+  { href: '/contact', label: 'Contact' },
+];
+const path = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 border-b border-line/60 bg-base/70 backdrop-blur-md">
+  <nav class="wrap flex h-16 items-center justify-between">
+    <a href="/" class="group flex items-center gap-2 font-mono text-sm font-semibold tracking-tight">
+      <span
+        class="grid h-8 w-8 place-items-center rounded-md bg-accent text-white transition-colors group-hover:bg-accent-bright"
+        >IB</span
+      >
+      <span class="text-fg">Ivan&nbsp;Bosso</span>
+    </a>
+
+    <div class="hidden items-center gap-7 md:flex">
+      {
+        links.map((l) => (
+          <a
+            href={l.href}
+            class:list={[
+              'text-sm transition-colors hover:text-fg',
+              path.startsWith(l.href) ? 'text-fg' : 'text-muted',
+            ]}
+          >
+            {l.label}
+          </a>
+        ))
+      }
+      <a
+        href="/contact"
+        class="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-bright"
+        >Me contacter</a
+      >
+    </div>
+
+    <a href="/portfolio" class="text-sm text-muted hover:text-fg md:hidden">Menu</a>
+  </nav>
+</header>

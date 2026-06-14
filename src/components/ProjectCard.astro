@@ -1,0 +1,48 @@
+---
+import type { Project } from '../data/projects';
+import ClientLogo from './ClientLogo.astro';
+interface Props { project: Project }
+const { project } = Astro.props;
+---
+
+<a
+  href={`/portfolio/${project.slug}`}
+  class="reveal group relative flex flex-col gap-5 rounded-xl border border-line/70 bg-surface/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent-bright/60 hover:bg-surface/70"
+>
+  <!-- En-tête : logo client + domaine -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <ClientLogo client={project.client} monogram={project.monogram} logo={project.logo} size={44} />
+      <div>
+        <p class="text-sm font-semibold text-fg">{project.client}</p>
+        <p class="text-xs text-muted">mission menée chez IOD</p>
+      </div>
+    </div>
+    <span
+      class:list={[
+        'rounded-full px-2.5 py-1 font-mono text-[11px] font-semibold',
+        project.domain === 'IA' ? 'bg-accent/20 text-accent-bright' : 'bg-citron/15 text-citron',
+      ]}
+    >
+      {project.domain}
+    </span>
+  </div>
+
+  <!-- Big line : la tâche -->
+  <div>
+    <h3 class="text-lg font-bold leading-snug text-fg group-hover:text-accent-bright">{project.title}</h3>
+    <p class="mt-2 text-sm leading-relaxed text-muted">{project.task}</p>
+  </div>
+
+  <!-- Métrique vedette + flèche -->
+  <div class="mt-auto flex items-end justify-between border-t border-line/60 pt-4">
+    <div>
+      <p class="font-mono text-2xl font-bold text-fg">{project.headline.value}</p>
+      <p class="text-xs text-muted">{project.headline.label}</p>
+    </div>
+    <span class="flex items-center gap-1 text-sm text-accent-bright opacity-0 transition-opacity group-hover:opacity-100">
+      Étude de cas
+      <span class="transition-transform group-hover:translate-x-1">→</span>
+    </span>
+  </div>
+</a>

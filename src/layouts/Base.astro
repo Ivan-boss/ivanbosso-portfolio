@@ -1,0 +1,123 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+import CustomCursor from '../components/CustomCursor.tsx';
+import { SITE } from '../config/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  jsonLd?: object | object[];
+}
+const {
+  title = 'Ivan Bosso · Ingénieur Data / IA',
+  description = "Ingénieur Data/IA à Nantes. J'aide les entreprises à transformer une idée en un produit data ou IA réellement en production : utile, fiable et mesuré.",
+  image,
+  jsonLd,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const ogPath = image || SITE.ogImage;
+const ogImage = ogPath ? new URL(ogPath, SITE.url).href : undefined;
+
+// Données structurées (GEO/AI-SEO) : Person + WebSite globaux + JSON-LD de page
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  jobTitle: 'Ingénieur Data / IA',
+  url: SITE.url,
+  email: `mailto:${SITE.email}`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Nantes', addressCountry: 'FR' },
+  sameAs: [SITE.linkedin].filter(Boolean),
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Polytech Nantes' },
+  worksFor: { '@type': 'Organization', name: 'IOD Solutions' },
+  knowsAbout: [
+    'Intelligence artificielle', 'LLM', 'RAG', 'NLP', 'Machine learning',
+    'Data engineering', 'MLOps', 'Python', 'FastAPI', 'Google Cloud', 'React',
+  ],
+};
+const websiteLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url };
+const allLd = [personLd, websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Ivan Bosso" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <!-- Données structurées (GEO / AI-SEO) -->
+    {allLd.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Lora:ital,wght@1,400;1,500;1,600&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <Analytics />
+    <script is:inline>
+      // évite tout flash du loader sur les pages déjà vues / navigations client
+      if (sessionStorage.getItem('ib_seen') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('loader-seen');
+      }
+    </script>
+  </head>
+  <body class="bg-base text-fg min-h-screen antialiased">
+    <!-- Écran de chargement (1×/session, sortie rapide, reduced-motion safe) -->
+    <div id="ib-loader" aria-hidden="true">
+      <div>
+        <p class="ib-hello"><span class="ib-accent">Ivan</span> vous dit bonjour</p>
+        <p class="ib-sub">Vous allez découvrir qui est Ivan.</p>
+        <div class="ib-bar"><span></span></div>
+      </div>
+    </div>
+    <script is:inline>
+      (function () {
+        var html = document.documentElement;
+        var el = document.getElementById('ib-loader');
+        if (!el || html.classList.contains('loader-seen')) return; // déjà vu → masqué par CSS
+        html.style.overflow = 'hidden';
+        window.setTimeout(function () {
+          el.classList.add('ib-done'); // animation de sortie
+          html.style.overflow = '';
+          sessionStorage.setItem('ib_seen', '1');
+          window.setTimeout(function () { html.classList.add('loader-seen'); }, 700);
+        }, 1500);
+      })();
+    </script>
+
+    <CustomCursor client:idle />
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <!-- Moteur d'animation (GSAP : entrée hero, reveals, scramble, compteurs, scroll-linked) -->
+    <script>
+      import '../scripts/anim.ts';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+---
+import { STACK } from '../data/stack';
+// Logos via simple-icons CDN (couleur de marque). Pour du 100% local/offline plus tard :
+// télécharger les SVG dans public/logos/ et remplacer la source ci-dessous.
+const logoUrl = (slug: string) => `https://cdn.simpleicons.org/${slug}`;
+---
+
+<section class="wrap mt-24">
+  <div class="reveal">
+    <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">// Stack technique</p>
+    <h2 class="mt-3 text-2xl font-bold sm:text-3xl">Les outils du quotidien</h2>
+    <p class="mt-2 text-muted">Ce avec quoi je conçois, entraîne, déploie et observe.</p>
+  </div>
+
+  <div class="mt-8 grid gap-4 sm:grid-cols-3">
+    {
+      STACK.map((cat) => (
+        <div class="reveal rounded-xl border border-line/70 bg-surface/40 p-6">
+          <h3 class="font-mono text-sm font-semibold text-accent-bright">{cat.group}</h3>
+          <ul class="mt-4 flex flex-wrap gap-2.5">
+            {cat.items.map((t) => (
+              <li
+                class="group flex items-center gap-2 rounded-lg border border-line/60 bg-base/60 px-3 py-2 transition-colors hover:border-accent-bright/50"
+                data-cursor
+              >
+                {t.slug ? (
+                  <img
+                    src={logoUrl(t.slug)}
+                    alt={t.name}
+                    width="20"
+                    height="20"
+                    loading="lazy"
+                    class="h-5 w-5 transition-transform duration-300 group-hover:scale-110"
+                  />
+                ) : null}
+                <span class="text-sm text-fg/90">{t.name}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,274 @@
+@import "tailwindcss";
+
+/* ── Design tokens (étendent la charte des CV) ─────────────────────── */
+@theme {
+  --color-base: #04040a;        /* noir terminal (charte : encore plus noir que navy) */
+  --color-surface: #0a1628;     /* navy #0A1628 (charte) — cartes / surfaces */
+  --color-surface-2: #13233d;   /* navy clair — surfaces élevées */
+  --color-line: #1e2d46;        /* bordures */
+  --color-accent: #1b3fd8;      /* indigo #1B3FD8 (charte) — couleur principale */
+  --color-accent-bright: #3f63f5; /* indigo clair — glow / hover sur le noir */
+  --color-citron: #d6f040;      /* citron #D6F040 (charte) — highlight, parcimonie */
+  --color-fg: #eef2f7;
+  --color-muted: #8a96aa;       /* gris-bleu (charte #6B7890, éclairci pour le dark) */
+
+  --font-sans: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-serif: "Lora", Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-base);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+}
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── Signature : le fil « du problème à la valeur » ────────────────── */
+@keyframes pulse-travel {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(220%); opacity: 0; }
+}
+@keyframes node-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(43, 143, 216, 0.0); }
+  50%      { box-shadow: 0 0 18px 2px rgba(43, 143, 216, 0.35); }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── États initiaux cachés — l'animation est pilotée par GSAP (src/scripts/anim.ts) ──
+   class="reveal"        → fade-up (défaut)
+   class="reveal r-left" → swipe depuis la droite
+   class="reveal r-right"→ swipe depuis la gauche
+   class="reveal r-scale"→ apparition en zoom                                   */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  will-change: transform, opacity;
+}
+.reveal.r-left { transform: translateX(48px); }
+.reveal.r-right { transform: translateX(-48px); }
+.reveal.r-scale { transform: scale(0.9); }
+[data-hero-el] { opacity: 0; }
+
+/* ── Intro « effet waouh » à l'arrivée (orchestration) ─────────────── */
+@keyframes clip-up {
+  from { opacity: 0; transform: translateY(24px); clip-path: inset(0 0 100% 0); }
+  to   { opacity: 1; transform: translateY(0);    clip-path: inset(0 0 0% 0); }
+}
+@keyframes pop-in {
+  0%   { opacity: 0; transform: scale(0.1); }
+  65%  { opacity: 1; transform: scale(1.35); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes draw-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes sweep {
+  0%   { left: -12%; opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { left: 112%; opacity: 0; }
+}
+@keyframes glow-text {
+  0%, 100% { text-shadow: 0 0 0 rgba(63, 185, 132, 0); }
+  50%      { text-shadow: 0 0 24px rgba(63, 185, 132, 0.55); }
+}
+@keyframes aurora {
+  0%   { transform: translate(-8%, -4%) scale(1); }
+  50%  { transform: translate(8%, 6%) scale(1.18); }
+  100% { transform: translate(-8%, -4%) scale(1); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+/* élément qui s'anime à l'arrivée — piloter le délai via style="animation-delay:.." */
+.anim { opacity: 0; animation: clip-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-rise { opacity: 0; animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* aurore respirante derrière le hero */
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: 0.22;
+  pointer-events: none;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal, [data-hero-el], [data-roles] { opacity: 1 !important; transform: none !important; }
+}
+
+/* Utilitaire conteneur */
+.wrap { width: 100%; max-width: 1120px; margin-inline: auto; padding-inline: 1.5rem; }
+
+/* ── Curseur dynamique ─────────────────────────────────────────────── */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 9999px;
+  will-change: transform;
+  width: 12px;
+  height: 12px;
+  background: var(--color-accent-bright);
+  box-shadow: 0 0 16px 3px color-mix(in srgb, var(--color-accent-bright) 70%, transparent);
+  transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
+}
+html.has-custom-cursor.cursor-hover .cursor-dot {
+  width: 20px;
+  height: 20px;
+  background: var(--color-citron);
+  box-shadow: 0 0 20px 4px color-mix(in srgb, var(--color-citron) 70%, transparent);
+}
+/* masque le curseur natif quand le custom est actif (souris fine uniquement) */
+html.has-custom-cursor,
+html.has-custom-cursor a,
+html.has-custom-cursor button {
+  cursor: none;
+}
+@media (pointer: coarse) {
+  .cursor-dot { display: none; }
+}
+
+/* ── Citation forte ────────────────────────────────────────────────── */
+.quote-grad {
+  background: linear-gradient(120deg, var(--color-fg) 0%, var(--color-accent-bright) 55%, var(--color-citron) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Écran de chargement ───────────────────────────────────────────── */
+#ib-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  background: var(--color-base);
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.6s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.4s ease;
+}
+#ib-loader.ib-hide { display: none; }
+html.loader-seen #ib-loader { display: none; }
+#ib-loader.ib-done { clip-path: inset(0 0 100% 0); opacity: 0; pointer-events: none; }
+.ib-hello {
+  font-size: clamp(1.8rem, 5.5vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-align: center;
+  opacity: 0;
+  animation: clip-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+.ib-hello .ib-accent { color: var(--color-accent-bright); }
+.ib-sub {
+  margin-top: 0.7rem;
+  text-align: center;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  animation: rise 0.7s ease 0.55s both;
+}
+.ib-bar {
+  margin: 1.5rem auto 0;
+  height: 2px;
+  width: 180px;
+  background: var(--color-surface-2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.ib-bar > span {
+  display: block;
+  height: 100%;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--color-accent-bright), var(--color-citron));
+  animation: ib-fill 1.3s ease forwards;
+}
+@keyframes ib-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* ── Rôles tournants (hero) ────────────────────────────────────────── */
+.role-rotator {
+  display: inline-block;
+  color: var(--color-accent-bright);
+  animation: role-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes role-in {
+  from { opacity: 0; transform: translateY(0.6em); filter: blur(3px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* ── Bloc code (Shiki) : fond transparent pour s'intégrer à la carte ── */
+.codecard pre.astro-code,
+.codecard pre.astro-code span {
+  background: transparent !important;
+}
+.codecard pre.astro-code {
+  margin: 0;
+}
+
+/* ── Fond « mesh » animé (dégradé vivant qui bouge) ────────────────── */
+.mesh-bg {
+  background:
+    radial-gradient(40% 55% at 18% 28%, color-mix(in srgb, var(--color-accent-bright) 32%, transparent), transparent 70%),
+    radial-gradient(38% 50% at 82% 38%, color-mix(in srgb, var(--color-accent) 38%, transparent), transparent 70%),
+    radial-gradient(48% 60% at 50% 92%, color-mix(in srgb, var(--color-citron) 22%, transparent), transparent 70%),
+    var(--color-base);
+  background-size: 170% 170%, 170% 170%, 170% 170%, 100% 100%;
+  animation: mesh-move 20s ease-in-out infinite alternate;
+}
+@keyframes mesh-move {
+  0%   { background-position: 0% 10%, 100% 0%, 50% 100%, 0 0; }
+  50%  { background-position: 40% 30%, 60% 40%, 30% 70%, 0 0; }
+  100% { background-position: 10% 0%, 90% 20%, 60% 90%, 0 0; }
+}
+
+/* ── Mot accent éditorial (charte : Lora italic, citron sur fond sombre) ── */
+.accent-word {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-citron);
+}
+
+/* ── Traînée du curseur ────────────────────────────────────────────── */
+.cursor-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--color-accent-bright);
+  pointer-events: none;
+  z-index: 9998;
+  will-change: transform, opacity;
+}
+@media (pointer: coarse) {
+  .cursor-trail { display: none; }
+}

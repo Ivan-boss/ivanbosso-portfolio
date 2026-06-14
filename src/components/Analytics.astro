@@ -1,0 +1,40 @@
+---
+// Injecte le script du fournisseur d'analytics choisi dans src/config/site.ts.
+// Tant que provider = 'none', rien n'est chargé (zéro impact perf).
+import { ANALYTICS } from '../config/site';
+const a = ANALYTICS;
+---
+
+{
+  a.provider === 'cloudflare' && a.cloudflareToken && (
+    <script
+      is:inline
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon={`{"token": "${a.cloudflareToken}"}`}
+    />
+  )
+}
+
+{
+  a.provider === 'plausible' && a.plausibleDomain && (
+    <script is:inline defer data-domain={a.plausibleDomain} src="https://plausible.io/js/script.js" />
+  )
+}
+
+{
+  a.provider === 'umami' && a.umamiSrc && a.umamiWebsiteId && (
+    <script is:inline defer src={a.umamiSrc} data-website-id={a.umamiWebsiteId} />
+  )
+}
+
+{
+  a.provider === 'goatcounter' && a.goatcounterCode && (
+    <script
+      is:inline
+      data-goatcounter={`https://${a.goatcounterCode}.goatcounter.com/count`}
+      async
+      src="//gc.zgo.at/count.js"
+    />
+  )
+}

@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config/site';
+---
+
+<Base title="Contact · Ivan Bosso" description="Contacter Ivan Bosso, ingénieur Data/IA à Nantes : email, LinkedIn, téléphone. Disponible pour un CDI et des missions freelance.">
+  <section class="wrap pt-16 sm:pt-24">
+    <p class="reveal font-mono text-sm text-accent-bright">// Contact</p>
+    <h1 class="reveal mt-3 text-3xl font-black tracking-tight sm:text-5xl">Discutons</h1>
+    <p class="reveal mt-4 max-w-2xl text-lg text-muted">
+      Une opportunité, une mission, ou simplement une question sur un projet data/IA ? Écrivez-moi.
+    </p>
+
+    <div class="reveal mt-10 grid gap-4 sm:grid-cols-2">
+      <a
+        href={`mailto:${SITE.email}`}
+        class="group rounded-xl border border-line/70 bg-surface/40 p-6 transition-colors hover:border-accent-bright/60"
+      >
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">Email</p>
+        <p class="mt-2 text-lg font-semibold text-fg group-hover:text-accent-bright">{SITE.email}</p>
+      </a>
+      <a
+        href={SITE.linkedin}
+        target="_blank"
+        rel="noopener"
+        class="group rounded-xl border border-line/70 bg-surface/40 p-6 transition-colors hover:border-accent-bright/60"
+      >
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">LinkedIn</p>
+        <p class="mt-2 text-lg font-semibold text-fg group-hover:text-accent-bright">in/ivan-bosso</p>
+      </a>
+      <a
+        href={`tel:${SITE.phoneIntl}`}
+        class="group rounded-xl border border-line/70 bg-surface/40 p-6 transition-colors hover:border-accent-bright/60"
+      >
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">Téléphone</p>
+        <p class="mt-2 text-lg font-semibold text-fg group-hover:text-accent-bright">{SITE.phone}</p>
+      </a>
+      <div class="rounded-xl border border-line/70 bg-surface/40 p-6">
+        <p class="font-mono text-xs uppercase tracking-widest text-muted">Localisation</p>
+        <p class="mt-2 text-lg font-semibold text-fg">{SITE.location} · télétravail ou présentiel</p>
+      </div>
+    </div>
+  </section>
+</Base>

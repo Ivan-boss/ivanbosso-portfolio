@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import NeuralBg from '../components/NeuralBg.tsx';
+---
+
+<Base title="Page introuvable · Ivan Bosso" description="Cette page n'existe pas (ou pas encore). Retournez à l'accueil du site d'Ivan Bosso, ingénieur Data/IA.">
+  <section class="relative flex min-h-[80vh] items-center overflow-hidden">
+    <!-- ambiance -->
+    <div class="pointer-events-none absolute inset-0 -z-20 overflow-hidden">
+      <div class="aurora-blob h-[34rem] w-[34rem] bg-accent-bright" style="top:-10rem;left:-4rem;animation:aurora 18s ease-in-out infinite"></div>
+      <div class="aurora-blob h-[28rem] w-[28rem] bg-citron" style="bottom:-10rem;right:-2rem;animation:aurora 24s ease-in-out infinite reverse;opacity:0.12"></div>
+    </div>
+    <div class="absolute inset-0 -z-10 opacity-70">
+      <NeuralBg client:visible />
+    </div>
+
+    <div class="wrap text-center">
+      <p class="anim font-mono text-sm uppercase tracking-[0.3em] text-muted" style="animation-delay:.05s">
+        Erreur 404
+      </p>
+
+      <h1
+        class="anim mt-4 text-7xl font-black leading-none tracking-tight sm:text-[10rem]"
+        style="animation-delay:.18s"
+      >
+        <span class="quote-grad">404</span>
+      </h1>
+
+      <p class="anim mt-6 text-2xl font-bold sm:text-3xl" style="animation-delay:.3s">
+        Cette page a pris des vacances.
+      </p>
+      <p class="anim-rise mx-auto mt-4 max-w-xl text-muted" style="animation-delay:.45s">
+        Soit Ivan est encore en train de la coder, soit elle n'a jamais existé.
+        Pas de panique&nbsp;: le reste du site, lui, est bien réel et Ivan reste disponible.
+      </p>
+
+      <!-- ligne terminal -->
+      <div
+        class="anim-rise mx-auto mt-8 max-w-md rounded-lg border border-line/70 bg-surface/60 px-4 py-3 text-left font-mono text-sm"
+        style="animation-delay:.6s"
+      >
+        <span class="text-citron">$</span>
+        <span class="text-muted"> ivan status</span>
+        <br />
+        <span class="text-accent-bright">→ page introuvable, mais moi je suis dispo.</span>
+      </div>
+
+      <div class="anim-rise mt-9 flex flex-wrap items-center justify-center gap-3" style="animation-delay:.75s">
+        <a
+          href="/"
+          class="rounded-md bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-bright"
+          >Retour à l'accueil</a
+        >
+        <a
+          href="/contact"
+          class="rounded-md border border-line px-6 py-3 font-semibold text-fg transition-colors hover:border-accent-bright hover:text-accent-bright"
+          >Me contacter</a
+        >
+      </div>
+    </div>
+  </section>
+</Base>

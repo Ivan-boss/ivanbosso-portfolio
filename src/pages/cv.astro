@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config/site';
+
+const skills = [
+  { group: 'IA / LLM', items: ['LLM en prod (Gemini, GPT, Mistral/Pixtral, Claude)', 'LLM de vision', 'RAG (FAISS, BM25, pgvector)', 'embeddings (BGE-M3)', 'évaluation (Langfuse)'] },
+  { group: 'ML / Data Science', items: ['scikit-learn', 'PyTorch', 'clustering (UMAP, HDBSCAN, k-means)', 'NLP (spaCy, GLiNER, Presidio)'] },
+  { group: 'Data Engineering', items: ['ETL / multi-sources (INSEE, BPE…)', 'scraping (Playwright, Selenium)', 'BigQuery', 'PostgreSQL / pgvector', 'n8n'] },
+  { group: 'Backend & Frontend', items: ['Python', 'FastAPI', 'SQLAlchemy async', 'Pydantic v2', 'React 19', 'TypeScript', 'Tailwind'] },
+  { group: 'Cloud / DevOps', items: ['GCP (Cloud Run, BigQuery, Pub/Sub)', 'Docker', 'CI/CD', 'Terraform', 'Linux', 'archi hexagonale'] },
+];
+---
+
+<Base title="CV · Ivan Bosso" description="CV d'Ivan Bosso, ingénieur Data/IA à Nantes : compétences LLM/RAG/NLP, data engineering, MLOps, full-stack, et formation Polytech Nantes. Téléchargeable en PDF.">
+  <section class="wrap pt-16 sm:pt-20">
+    <p class="reveal font-mono text-sm text-accent-bright">// CV</p>
+    <div class="reveal mt-3 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-3xl font-black tracking-tight sm:text-5xl">Ivan Bosso</h1>
+        <p class="mt-2 text-lg text-muted">Ingénieur Data / IA · Nantes · TOEIC 945 · Permis B</p>
+      </div>
+      <a
+        href={SITE.cvPdf}
+        class="inline-block rounded-md bg-accent px-6 py-3 text-center font-semibold text-white transition-colors hover:bg-accent-bright"
+        >Télécharger le PDF</a
+      >
+    </div>
+    <p class="reveal mt-4 max-w-2xl text-muted">
+      Note v1 : déposer le PDF généré (depuis <code class="font-mono text-fg">02_CV/rendercv-build/_pdf/</code>) dans
+      <code class="font-mono text-fg">site/public/cv/</code> pour activer le bouton.
+    </p>
+  </section>
+
+  <section class="wrap mt-12">
+    <h2 class="reveal text-xl font-bold">Compétences</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      {
+        skills.map((s) => (
+          <div class="reveal rounded-xl border border-line/70 bg-surface/40 p-5">
+            <h3 class="font-mono text-sm font-semibold text-accent-bright">{s.group}</h3>
+            <div class="mt-3 flex flex-wrap gap-2">
+              {s.items.map((it) => (
+                <span class="rounded-md bg-base px-2.5 py-1 text-sm text-fg/90">{it}</span>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap mt-16">
+    <h2 class="reveal text-xl font-bold">Formation</h2>
+    <ul class="reveal mt-4 flex flex-col gap-3 text-fg/90">
+      <li><strong class="text-fg">Polytech Nantes</strong>, diplôme d'ingénieur en informatique · depuis 2023</li>
+      <li><strong class="text-fg">Université des Montagnes</strong>, master Génie logiciel · 2021–2023</li>
+      <li><strong class="text-fg">Université des Montagnes</strong>, licence pro Informatique, Réseaux & Télécoms · 2019–2021</li>
+    </ul>
+  </section>
+</Base>
