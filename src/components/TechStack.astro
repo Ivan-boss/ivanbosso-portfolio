@@ -1,8 +1,13 @@
 ---
 import { STACK } from '../data/stack';
+import Icon from './Icon.astro';
 // Logos via simple-icons CDN (couleur de marque). Pour du 100% local/offline plus tard :
 // télécharger les SVG dans public/logos/ et remplacer la source ci-dessous.
 const logoUrl = (slug: string) => `https://cdn.simpleicons.org/${slug}`;
+const SOFT: Record<string, string> = {
+  'accent-bright': 'bg-accent-bright/10 text-accent-bright',
+  citron: 'bg-citron/15 text-citron',
+};
 ---
 
 <section class="wrap mt-24">
@@ -12,24 +17,30 @@ const logoUrl = (slug: string) => `https://cdn.simpleicons.org/${slug}`;
     <p class="mt-2 text-muted">Ce avec quoi je conçois, entraîne, déploie et observe.</p>
   </div>
 
-  <div class="mt-8 grid gap-4 sm:grid-cols-3">
+  <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
     {
-      STACK.map((cat) => (
-        <div class="reveal rounded-xl border border-line/70 bg-surface/40 p-6">
-          <h3 class="font-mono text-sm font-semibold text-accent-bright">{cat.group}</h3>
+      STACK.map((cat, i) => (
+        <div class:list={['glass reveal rounded-xl p-6', i % 2 ? 'r-right' : 'r-left']} data-tilt>
+          <h3 class="flex items-center gap-2.5 font-mono text-sm font-semibold text-fg">
+            <span class:list={['grid h-8 w-8 shrink-0 place-items-center rounded-lg', SOFT[cat.c]]}>
+              <Icon name={cat.icon} size={18} />
+            </span>
+            {cat.group}
+          </h3>
           <ul class="mt-4 flex flex-wrap gap-2.5">
             {cat.items.map((t) => (
               <li
                 class="group flex items-center gap-2 rounded-lg border border-line/60 bg-base/60 px-3 py-2 transition-colors hover:border-accent-bright/50"
                 data-cursor
               >
-                {t.slug ? (
+                {t.logo || t.slug ? (
                   <img
-                    src={logoUrl(t.slug)}
+                    src={t.logo ?? logoUrl(t.slug)}
                     alt={t.name}
                     width="20"
                     height="20"
                     loading="lazy"
+                    onerror="this.remove()"
                     class="h-5 w-5 transition-transform duration-300 group-hover:scale-110"
                   />
                 ) : null}

@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import ClientLogo from '../../components/ClientLogo.astro';
 import { PROJECTS, SECONDARY } from '../../data/projects';
 ---
 
@@ -16,7 +17,7 @@ import { PROJECTS, SECONDARY } from '../../data/projects';
 
   <section class="wrap mt-12">
     <div class="grid gap-5 sm:grid-cols-2">
-      {PROJECTS.map((p) => <ProjectCard project={p} />)}
+      {PROJECTS.map((p, i) => <ProjectCard project={p} variant={i % 2 ? 'r-right' : 'r-left'} />)}
     </div>
   </section>
 
@@ -26,11 +27,20 @@ import { PROJECTS, SECONDARY } from '../../data/projects';
     <p class="reveal mt-1 text-sm text-muted">Polyvalence : du RAG à l'intégration de données et à l'automatisation.</p>
     <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {
-        SECONDARY.map((s) => (
-          <div class="reveal rounded-lg border border-line/60 bg-surface/30 p-5">
-            <div class="flex items-center justify-between">
-              <p class="font-semibold text-fg">{s.client}</p>
-              <div class="flex gap-1.5">
+        SECONDARY.map((s, i) => (
+          <div class:list={['glass reveal rounded-lg p-5', i % 3 === 0 ? 'r-left' : i % 3 === 1 ? 'r-scale' : 'r-right']} data-tilt>
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <ClientLogo client={s.client} monogram={s.monogram} logo={s.logo} website={s.website} link={true} size={30} />
+                {s.website ? (
+                  <a href={s.website} target="_blank" rel="noopener" class="font-semibold text-fg transition-colors hover:text-accent-bright">
+                    {s.client} <span class="text-xs text-muted">↗</span>
+                  </a>
+                ) : (
+                  <p class="font-semibold text-fg">{s.client}</p>
+                )}
+              </div>
+              <div class="flex shrink-0 gap-1.5">
                 {s.tags.map((t) => (
                   <span class="rounded-full bg-base px-2 py-0.5 font-mono text-[10px] text-muted">{t}</span>
                 ))}

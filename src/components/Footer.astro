@@ -10,10 +10,10 @@ const year = 2026;
       <p class="text-sm text-muted">{SITE.role} · {SITE.location}</p>
     </div>
     <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
-      <a class="hover:text-fg" href={SITE.linkedin} target="_blank" rel="noopener">LinkedIn</a>
-      {SITE.github && <a class="hover:text-fg" href={SITE.github} target="_blank" rel="noopener">GitHub</a>}
-      <a class="hover:text-fg" href={`mailto:${SITE.email}`}>Email</a>
-      <a class="hover:text-fg" href="/cv">CV</a>
+      <a class="transition-colors hover:text-accent-bright" href={SITE.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
+      {SITE.github && <a class="transition-colors hover:text-accent-bright" href={SITE.github} target="_blank" rel="noopener">GitHub ↗</a>}
+      <a class="transition-colors hover:text-accent-bright" href={`mailto:${SITE.email}`}>Email</a>
+      <a class="transition-colors hover:text-fg" href="/cv">CV</a>
       <span class="text-muted/60">© {year}</span>
     </div>
   </div>

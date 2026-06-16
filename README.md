@@ -49,7 +49,27 @@ src/
   styles/global.css     → tokens de design (couleurs/polices) + animations
 ```
 
-## Déploiement (hébergement simple)
-Site **statique** → déployable gratuitement sur **Cloudflare Pages**, **Netlify** ou **Vercel** :
-build = `npm run build`, dossier de sortie = `dist/`. Brancher le nom de domaine acheté.
-Penser à mettre `SITE.url` à jour avec le vrai domaine.
+## Déploiement & mises à jour
+
+Le site est **statique** et hébergé gratuitement sur **Cloudflare Pages**, branché sur
+ce dépôt GitHub (branche `main`).
+
+**Réglages de build (déjà configurés côté Cloudflare) :**
+- Framework preset : `Astro`
+- Build command : `npm run build`
+- Build output directory : `dist`
+
+**Mettre le site à jour = un simple push :**
+```bash
+git add -A
+git commit -m "ma modif"
+git push            # → Cloudflare rebuild et publie automatiquement (~1-2 min)
+```
+> Filet de sécurité : si un build échoue, la version précédente **reste en ligne** (pas de downtime).
+> Tester en local avec `npm run build` avant de pousser évite les mauvaises surprises.
+
+**Domaine :** `ivanbosso.com` (DNS géré par Cloudflare). Le `SITE.url` dans
+`src/config/site.ts` doit pointer sur le domaine de prod (`https://ivanbosso.com`).
+
+> Note : URL de prévisualisation Cloudflare = `https://ivanbosso-portfolio.pages.dev`.
+> Portable : domaine + code GitHub indépendants → migration possible vers Netlify/Vercel sans perte.

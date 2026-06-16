@@ -20,8 +20,9 @@ export type Metric = { value: string; label: string };
 export type Project = {
   slug: string;
   client: string;
-  monogram: string; // logo de substitution (en attendant les vrais fichiers)
-  logo?: string; // chemin du vrai logo, ex. '/logos/cgr.svg' (déposer dans public/logos/)
+  monogram: string; // logo de substitution si pas de logo trouvé
+  logo?: string; // override manuel du logo (sinon dérivé de website via Clearbit)
+  website?: string; // site de l'entreprise cliente (logo + lien cliquable)
   domain: 'IA' | 'Data';
   tags: string[];
   title: string;
@@ -41,6 +42,8 @@ export const PROJECTS: Project[] = [
     slug: 'cgr-rfq',
     client: 'CGR International',
     monogram: 'CGR',
+    website: 'https://www.cgr-international.com',
+    logo: '/logos/cgr.png',
     domain: 'IA',
     tags: ['LLM Vision', 'Full-stack', 'Évaluation', 'Production'],
     title: 'Extraction LLM de données techniques pour la cotation industrielle',
@@ -72,6 +75,8 @@ export const PROJECTS: Project[] = [
     slug: 'oderis',
     client: 'ODERIS',
     monogram: 'OD',
+    website: 'https://oderis.fr',
+    logo: '/logos/oderis.png',
     domain: 'IA',
     tags: ['LLM', 'RGPD', 'Architecture', 'Échelle'],
     title: 'Classification IA de slides à l’échelle pour la due diligence',
@@ -102,11 +107,13 @@ export const PROJECTS: Project[] = [
     slug: 'igam',
     client: 'IGAM',
     monogram: 'IG',
+    website: 'https://www.igam.fr',
+    logo: '/logos/igam.png',
     domain: 'Data',
-    tags: ['NLP', 'Non supervisé', 'ML', '100 % solo'],
+    tags: ['NLP', 'Non supervisé', 'ML', 'RGPD'],
     title: 'Détection NLP non supervisée de sujets récurrents',
-    task: "Conçu seul, de bout en bout, un pipeline NLP non supervisé pour cartographier les sujets récurrents du flux d’emails entrant d’un cabinet paie/social.",
-    headline: { value: '100 % solo', label: 'détection automatique de thèmes' },
+    task: "Pipeline NLP non supervisé, de bout en bout, pour cartographier les sujets récurrents du flux d’emails entrant d’un cabinet d’expertise comptable.",
+    headline: { value: 'De bout en bout', label: 'pipeline NLP non supervisé' },
     metrics: [
       { value: 'ARI 0.88', label: 'qualité clustering' },
       { value: 'F1 0.94', label: 'sur corpus labellisé' },
@@ -117,7 +124,7 @@ export const PROJECTS: Project[] = [
     contrainte:
       "Apprentissage non supervisé (aucune vérité terrain), données de paie ultra-sensibles (RGPD), et nécessité de passer à l’échelle.",
     approche: [
-      "Pipeline conçu seul de bout en bout : ingestion (Microsoft Graph API) → anonymisation RGPD → embeddings → clustering → nommage par LLM → dataviz.",
+      "Pipeline conçu de bout en bout : ingestion (Microsoft Graph API) → anonymisation RGPD → embeddings → clustering → nommage par LLM → dataviz.",
       "Embeddings BGE-M3 auto-hébergés, réduction UMAP + clustering HDBSCAN, nommage des clusters par LLM.",
       "Anonymisation Presidio + spaCy FR + détecteurs à checksum (NIR, IBAN, SIRET, CB).",
     ],
@@ -132,10 +139,12 @@ export const PROJECTS: Project[] = [
     slug: 'immo-score',
     client: 'Valloire Habitat',
     monogram: 'VH',
+    website: 'https://www.valloire-habitat.com',
+    logo: '/logos/valloire.png',
     domain: 'Data',
     tags: ['Data pipeline', 'Multi-sources', 'LLM', 'GCP'],
     title: 'Scoring immobilier territorial multi-sources',
-    task: "Développé (contributeur quasi-unique, 7 mois) une chaîne complète data → décision évaluant l’attractivité immobilière d’une commune.",
+    task: "Développé sur 7 mois une chaîne complète data → décision évaluant l’attractivité immobilière d’une commune.",
     headline: { value: '7 mois', label: 'chaîne data → décision' },
     metrics: [
       { value: '~10', label: 'sources hétérogènes' },
@@ -160,11 +169,14 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-// Missions secondaires — cartes compactes (polyvalence)
-export const SECONDARY = [
-  { client: 'Vermon', task: 'Pipeline RAG à recherche hybride (Claude API, FAISS + BM25, fusion RRF) générant des fiches de Crédit Impôt Recherche, avec traçabilité des sources.', tags: ['RAG', 'FAISS'] },
-  { client: 'Naovie', task: 'Synchronisation HelloAsso → CRM Youday (rétro-ingénierie d’API) avec idempotence robuste aux relances de webhook.', tags: ['Intégration', 'Webhooks'] },
-  { client: 'Loyoly', task: 'Data platform event-driven sur GCP (RabbitMQ → Pub/Sub → BigQuery → Dataform), microservices Cloud Run, Terraform + CI/CD.', tags: ['Data platform', 'GCP'] },
-  { client: 'smartDevis', task: 'Interface React de génération de devis assistée par LLM (saisie vocale, export PDF).', tags: ['React', 'LLM'] },
-  { client: 'Adreau', task: 'Étude de faisabilité d’automatisation de 9 extranets prestataires (Playwright) ; login + lecture validés.', tags: ['Automation', 'Playwright'] },
+// Missions secondaires — cartes compactes (polyvalence).
+// `client` = entreprise réelle ; le nom de projet (ex. smartDevis) reste dans le texte.
+export type Secondary = { client: string; monogram: string; website?: string; logo?: string; task: string; tags: string[] };
+
+export const SECONDARY: Secondary[] = [
+  { client: 'Vermon', monogram: 'VE', website: 'https://www.vermon.com', logo: '/logos/vermon.png', task: 'Pipeline RAG à recherche hybride (Claude API, FAISS + BM25, fusion RRF) générant des fiches de Crédit Impôt Recherche, avec traçabilité des sources.', tags: ['RAG', 'FAISS'] },
+  { client: 'Naovie', monogram: 'NA', website: 'https://www.soutenir-naovie.fr', logo: '/logos/naovie.png', task: 'Fonds de dotation du CHU de Nantes : synchronisation des dons HelloAsso → CRM Youday (rétro-ingénierie d’API) avec idempotence robuste aux relances de webhook.', tags: ['Intégration', 'Webhooks'] },
+  { client: 'Loyoly', monogram: 'LO', website: 'https://www.loyoly.io', logo: '/logos/loyoly.png', task: 'Plateforme de fidélisation client : data platform event-driven sur GCP (RabbitMQ → Pub/Sub → BigQuery → Dataform), microservices Cloud Run, Terraform + CI/CD.', tags: ['Data platform', 'GCP'] },
+  { client: 'MAIF', monogram: 'MA', website: 'https://www.maif.fr', logo: '/logos/maif.png', task: 'Démonstrateur « smartDevis » pour l’assureur MAIF : interface React de génération de devis assistée par LLM (saisie vocale, export PDF).', tags: ['React', 'LLM'] },
+  { client: 'ADRÉ Eau', monogram: 'AE', website: 'https://www.adre-eau.fr', logo: '/logos/adre.png', task: 'Spécialiste de la recherche de fuite / dégâts des eaux : étude de faisabilité d’automatisation de 9 extranets prestataires (Playwright) ; login + lecture validés.', tags: ['Automation', 'Playwright'] },
 ];

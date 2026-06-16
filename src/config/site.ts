@@ -15,17 +15,20 @@ export const SITE = {
 
   // Contact
   email: 'dboss.ivan@gmail.com',
-  phone: '07 44 25 16 63',
-  phoneIntl: '+33744251663',
+  // Numéro volontairement retiré du site public (le code est inspectable).
+  // Ligne pro à venir : remettre la vraie valeur ici quand prête, puis
+  // réafficher la carte téléphone (voir src/pages/contact.astro).
+  phone: '',
+  phoneIntl: '',
   linkedin: 'https://www.linkedin.com/in/ivan-bosso',
   github: '', // laisser vide pour masquer le lien
 
-  // Chemin du CV PDF à télécharger (déposer le fichier dans public/cv/)
-  cvPdf: '/cv/Ivan-Bosso-CV.pdf',
+  // CV : rien à configurer ici. Déposez n'importe quel PDF dans public/cv/
+  // (le nom n'a aucune importance), il est détecté automatiquement au build.
 
   // Photo de profil (déposer le fichier dans public/, ex. public/ivan.jpg).
   // Laisser vide pour afficher le monogramme « IB » à la place.
-  photo: '', // ex. '/ivan.jpg'
+  photo: '/ivan.png',
 
   // Image de fond du bandeau « citation » (déposer dans public/, ex. /band.jpg).
   // Laisser vide = fond dégradé « mesh » généré (aucune image requise).

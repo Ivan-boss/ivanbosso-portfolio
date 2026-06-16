@@ -1,21 +1,22 @@
 ---
 import type { Project } from '../data/projects';
 import ClientLogo from './ClientLogo.astro';
-interface Props { project: Project }
-const { project } = Astro.props;
+interface Props { project: Project; variant?: string }
+const { project, variant = '' } = Astro.props;
 ---
 
 <a
   href={`/portfolio/${project.slug}`}
-  class="reveal group relative flex flex-col gap-5 rounded-xl border border-line/70 bg-surface/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent-bright/60 hover:bg-surface/70"
+  data-tilt
+  class:list={['glass reveal group relative flex flex-col gap-5 rounded-xl p-6', variant]}
 >
   <!-- En-tête : logo client + domaine -->
   <div class="flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <ClientLogo client={project.client} monogram={project.monogram} logo={project.logo} size={44} />
+      <ClientLogo client={project.client} monogram={project.monogram} logo={project.logo} website={project.website} size={44} />
       <div>
         <p class="text-sm font-semibold text-fg">{project.client}</p>
-        <p class="text-xs text-muted">mission menée chez IOD</p>
+        <p class="text-xs text-muted">{project.domain === 'IA' ? 'IA appliquée' : 'Data'}</p>
       </div>
     </div>
     <span
@@ -37,7 +38,7 @@ const { project } = Astro.props;
   <!-- Métrique vedette + flèche -->
   <div class="mt-auto flex items-end justify-between border-t border-line/60 pt-4">
     <div>
-      <p class="font-mono text-2xl font-bold text-fg">{project.headline.value}</p>
+      <p class="font-mono text-2xl font-bold text-fg" data-count>{project.headline.value}</p>
       <p class="text-xs text-muted">{project.headline.label}</p>
     </div>
     <span class="flex items-center gap-1 text-sm text-accent-bright opacity-0 transition-opacity group-hover:opacity-100">

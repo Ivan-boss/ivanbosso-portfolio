@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const TRAIL = 8; // longueur de la traînée
+const TRAIL = 16; // longueur de la traînée
 
 /**
  * Curseur dynamique : un point central (qui grossit au survol) suivi d'une

@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 import { SITE } from '../config/site';
 ---
 
-<Base title="Contact · Ivan Bosso" description="Contacter Ivan Bosso, ingénieur Data/IA à Nantes : email, LinkedIn, téléphone. Disponible pour un CDI et des missions freelance.">
+<Base title="Contact · Ivan Bosso" description="Contacter Ivan Bosso, ingénieur Data/IA à Nantes : email et LinkedIn. Disponible pour un CDI et des missions freelance.">
   <section class="wrap pt-16 sm:pt-24">
     <p class="reveal font-mono text-sm text-accent-bright">// Contact</p>
     <h1 class="reveal mt-3 text-3xl font-black tracking-tight sm:text-5xl">Discutons</h1>
@@ -14,30 +15,40 @@ import { SITE } from '../config/site';
     <div class="reveal mt-10 grid gap-4 sm:grid-cols-2">
       <a
         href={`mailto:${SITE.email}`}
-        class="group rounded-xl border border-line/70 bg-surface/40 p-6 transition-colors hover:border-accent-bright/60"
+        class="group rounded-xl glass p-6 transition-colors hover:border-accent-bright/60"
       >
-        <p class="font-mono text-xs uppercase tracking-widest text-muted">Email</p>
-        <p class="mt-2 text-lg font-semibold text-fg group-hover:text-accent-bright">{SITE.email}</p>
+        <div class="flex items-center gap-3">
+          <span class="grid h-10 w-10 place-items-center rounded-lg bg-accent-bright/10 text-accent-bright"><Icon name="mail" size={20} /></span>
+          <p class="font-mono text-xs uppercase tracking-widest text-muted">Email</p>
+        </div>
+        <p class="mt-3 text-lg font-semibold text-fg group-hover:text-accent-bright">{SITE.email}</p>
       </a>
       <a
         href={SITE.linkedin}
         target="_blank"
         rel="noopener"
-        class="group rounded-xl border border-line/70 bg-surface/40 p-6 transition-colors hover:border-accent-bright/60"
+        class="group rounded-xl glass p-6 transition-colors hover:border-accent-bright/60"
       >
-        <p class="font-mono text-xs uppercase tracking-widest text-muted">LinkedIn</p>
-        <p class="mt-2 text-lg font-semibold text-fg group-hover:text-accent-bright">in/ivan-bosso</p>
+        <div class="flex items-center gap-3">
+          <span class="grid h-10 w-10 place-items-center rounded-lg bg-citron/15 text-citron"><Icon name="linkedin" size={20} /></span>
+          <p class="font-mono text-xs uppercase tracking-widest text-muted">LinkedIn</p>
+        </div>
+        <p class="mt-3 text-lg font-semibold text-fg group-hover:text-accent-bright">in/ivan-bosso <span class="text-xs text-muted">↗</span></p>
       </a>
-      <a
-        href={`tel:${SITE.phoneIntl}`}
-        class="group rounded-xl border border-line/70 bg-surface/40 p-6 transition-colors hover:border-accent-bright/60"
-      >
-        <p class="font-mono text-xs uppercase tracking-widest text-muted">Téléphone</p>
-        <p class="mt-2 text-lg font-semibold text-fg group-hover:text-accent-bright">{SITE.phone}</p>
-      </a>
-      <div class="rounded-xl border border-line/70 bg-surface/40 p-6">
-        <p class="font-mono text-xs uppercase tracking-widest text-muted">Localisation</p>
-        <p class="mt-2 text-lg font-semibold text-fg">{SITE.location} · télétravail ou présentiel</p>
+      <div class="rounded-xl glass p-6">
+        <div class="flex items-center gap-3">
+          <span class="grid h-10 w-10 place-items-center rounded-lg bg-accent-bright/10 text-accent-bright"><Icon name="phone" size={20} /></span>
+          <p class="font-mono text-xs uppercase tracking-widest text-muted">Téléphone</p>
+        </div>
+        <p class="mt-3 select-none text-lg font-semibold text-fg blur-[6px]" aria-hidden="true">+33 6 00 00 00 00</p>
+        <p class="mt-1 text-xs text-muted">Ligne pro bientôt. Joignez-moi par email d'ici là.</p>
+      </div>
+      <div class="rounded-xl glass p-6">
+        <div class="flex items-center gap-3">
+          <span class="grid h-10 w-10 place-items-center rounded-lg bg-citron/15 text-citron"><Icon name="map-pin" size={20} /></span>
+          <p class="font-mono text-xs uppercase tracking-widest text-muted">Localisation</p>
+        </div>
+        <p class="mt-3 text-lg font-semibold text-fg">{SITE.location} · télétravail ou présentiel</p>
       </div>
     </div>
   </section>

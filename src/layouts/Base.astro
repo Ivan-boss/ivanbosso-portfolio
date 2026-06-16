@@ -4,6 +4,9 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
 import CustomCursor from '../components/CustomCursor.tsx';
+import NeuralBg3D from '../components/NeuralBg3D.tsx';
+import ShaderBg from '../components/ShaderBg.tsx';
+import { ClientRouter } from 'astro:transitions';
 import { SITE } from '../config/site';
 
 interface Props {
@@ -14,7 +17,7 @@ interface Props {
 }
 const {
   title = 'Ivan Bosso · Ingénieur Data / IA',
-  description = "Ingénieur Data/IA à Nantes. J'aide les entreprises à transformer une idée en un produit data ou IA réellement en production : utile, fiable et mesuré.",
+  description = "Ingénieur Data/IA à Nantes. J'aide les entreprises à automatiser leurs tâches et intégrer l'IA dans leurs process, pour gagner du temps et fiabiliser leurs décisions.",
   image,
   jsonLd,
 } = Astro.props;
@@ -77,38 +80,70 @@ const allLd = [personLd, websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd
     />
     <title>{title}</title>
     <Analytics />
+    <ClientRouter />
     <script is:inline>
-      // évite tout flash du loader sur les pages déjà vues / navigations client
-      if (sessionStorage.getItem('ib_seen') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // reload → toujours revenir en haut (pas de restauration de scroll)
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      // loader UNIQUEMENT sur la home ; masqué ailleurs ou si reduced-motion
+      if (location.pathname !== '/' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         document.documentElement.classList.add('loader-seen');
       }
     </script>
   </head>
-  <body class="bg-base text-fg min-h-screen antialiased">
+  <body class="text-fg min-h-screen antialiased">
+    <!-- Fond shader : vagues / dégradé fluide (étape 2), derrière tout -->
+    <ShaderBg client:load transition:persist="shaderbg" />
+    <!-- Fond nuageux mouvant (global) + orbes qui dérivent sur les côtés -->
+    <div class="site-bg" aria-hidden="true" transition:persist="site-bg">
+      <span class="bg-orb bg-orb-1"></span>
+      <span class="bg-orb bg-orb-2"></span>
+      <span class="bg-orb bg-orb-3"></span>
+    </div>
+    <!-- Réseau de neurones 3D plein écran (Three.js), derrière tout le contenu -->
+    <NeuralBg3D client:load transition:persist="bg3d" />
+    <!-- Voile de lisibilité (bande centrale) -->
+    <div class="read-scrim" aria-hidden="true" transition:persist="read-scrim"></div>
+
     <!-- Écran de chargement (1×/session, sortie rapide, reduced-motion safe) -->
     <div id="ib-loader" aria-hidden="true">
       <div>
-        <p class="ib-hello"><span class="ib-accent">Ivan</span> vous dit bonjour</p>
-        <p class="ib-sub">Vous allez découvrir qui est Ivan.</p>
+        <p class="ib-hello">L'<span class="ib-accent">humain</span> d'abord, l'IA ensuite.</p>
+        <p class="ib-sub">Installez-vous, ça arrive.</p>
         <div class="ib-bar"><span></span></div>
       </div>
     </div>
     <script is:inline>
+      window.scrollTo(0, 0); // top à chaque chargement
       (function () {
         var html = document.documentElement;
         var el = document.getElementById('ib-loader');
-        if (!el || html.classList.contains('loader-seen')) return; // déjà vu → masqué par CSS
+        if (!el || html.classList.contains('loader-seen')) return; // pas la home → masqué
         html.style.overflow = 'hidden';
-        window.setTimeout(function () {
-          el.classList.add('ib-done'); // animation de sortie
-          html.style.overflow = '';
-          sessionStorage.setItem('ib_seen', '1');
-          window.setTimeout(function () { html.classList.add('loader-seen'); }, 700);
-        }, 1500);
+        var ready = 0;
+        var exited = false;
+        var MIN = 900; // le « bonjour » s'affiche au moins ce temps
+        var start = Date.now();
+        function exit() {
+          if (exited) return;
+          exited = true;
+          var wait = Math.max(0, MIN - (Date.now() - start));
+          window.setTimeout(function () {
+            el.classList.add('ib-done'); // animation de sortie
+            html.style.overflow = '';
+            window.dispatchEvent(new Event('loader-done'));
+            window.setTimeout(function () { html.classList.add('loader-seen'); }, 700);
+          }, wait);
+        }
+        // attend que les 2 fonds (shader + réseau 3D) aient rendu leur 1re image
+        window.addEventListener('bg-ready', function () {
+          ready++;
+          if (ready >= 2) exit();
+        });
+        window.setTimeout(exit, 7000); // garde-fou (WebGL indisponible)
       })();
     </script>
 
-    <CustomCursor client:idle />
+    <CustomCursor client:idle transition:persist="cursor" />
     <Nav />
     <main>
       <slot />

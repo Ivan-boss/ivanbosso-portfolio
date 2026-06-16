@@ -1,29 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
-import NeuralBg from '../components/NeuralBg.tsx';
 import FlowNarrative from '../components/FlowNarrative.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import TechStack from '../components/TechStack.astro';
 import CodeCard from '../components/CodeCard.astro';
+import Icon from '../components/Icon.astro';
 import { PROJECTS } from '../data/projects';
 import { SITE } from '../config/site';
 
 const featured = PROJECTS.filter((p) => p.featured);
 
-// Piliers GÉNÉRIQUES et intemporels (pas de chiffre lié à un projet précis)
+// Piliers GÉNÉRIQUES et intemporels (pas de chiffre lié à un projet précis).
+// Pensés pour parler autant à un manager qui recrute en interne qu'à un client.
 const pillars = [
-  { k: 'En production', v: 'Des solutions qui tournent vraiment, pas des prototypes.', c: 'accent-bright' },
-  { k: 'Mesuré', v: 'Des résultats chiffrés et évalués, pas du « ça marche ».', c: 'citron' },
-  { k: 'De bout en bout', v: 'De la première idée jusqu’au déploiement.', c: 'accent-bright' },
-  { k: 'Multi-secteurs', v: 'Industrie, paie, assurance, immobilier social…', c: 'citron' },
+  { k: 'Du concret, pas un prototype', v: 'Je livre des outils utilisés en production, tous les jours. Pas une démo qui finit oubliée dans un coin.', c: 'accent-bright' },
+  { k: 'Un ROI que vous mesurez', v: 'Temps gagné, erreurs en moins, coûts réduits : je chiffre l’impact. Vous savez ce que ça rapporte.', c: 'citron' },
+  { k: 'Autonome, de bout en bout', v: 'De la donnée jusqu’à l’interface, je couvre toute la chaîne. Opérationnel vite, sans qu’on ait à tout cadrer pour moi.', c: 'accent-bright' },
+  { k: 'Je m’intègre à votre métier', v: 'Industrie, finance, paie, immobilier : je m’adapte à votre terrain et à votre équipe.', c: 'citron' },
 ];
 
-// Pourquoi travailler avec moi
+// Ma façon de travailler — la philosophie (distincte des piliers « résultats » du haut).
+// L'humain au centre : l'IA est un outil, pas une fin.
 const why = [
-  { icon: '🚀', title: 'Je vais jusqu’à la production', desc: 'Beaucoup s’arrêtent au prototype. Je livre des solutions qui tournent, pour de vrais utilisateurs.', c: 'accent-bright' },
-  { icon: '🎯', title: 'Je pars du besoin, pas de la techno', desc: 'La technologie au service de la valeur métier, jamais l’inverse.', c: 'citron' },
-  { icon: '📊', title: 'Je mesure ce que je livre', desc: 'Vous savez ce que ça vaut et ce que ça rapporte, pas seulement que « ça marche ».', c: 'accent-bright' },
-  { icon: '🧩', title: 'Polyvalent, de la donnée à l’écran', desc: 'Données, modèles, back-end, interface : je couvre toute la chaîne.', c: 'citron' },
+  { icon: 'users', title: 'L’humain d’abord', desc: 'Au-delà de la performance, je conçois pour les personnes qui vont s’en servir. Un outil n’a de valeur que s’il est adopté.', c: 'accent-bright' },
+  { icon: 'scale', title: 'Tout n’est pas à automatiser', desc: 'Ce n’est pas une course à l’automatisation. Certaines décisions doivent rester humaines, et je sais où l’IA aide vraiment.', c: 'citron' },
+  { icon: 'compass', title: 'L’IA est un moyen, pas une fin', desc: 'Je pars de la valeur, pas de la hype. La bonne techno, c’est celle qui règle votre problème, pas la plus à la mode.', c: 'accent-bright' },
+  { icon: 'refresh', title: 'Orienté valeur, pas « toolmaniac »', desc: 'Les outils changent vite ; m’enfermer dans un seul serait un risque. Je reste agnostique et je m’attache au résultat qui dure.', c: 'citron' },
 ];
 
 // maps couleur → classes littérales (pour que Tailwind les génère)
@@ -38,33 +40,25 @@ const SOFT: Record<string, string> = {
 <Base>
   <!-- ░░ HERO ░░ -->
   <section class="relative overflow-hidden">
-    <!-- Aurore respirante -->
-    <div class="pointer-events-none absolute inset-0 -z-20 overflow-hidden">
-      <div class="aurora-blob h-[40rem] w-[40rem] bg-accent-bright" style="top:-12rem;left:-6rem;animation:aurora 16s ease-in-out infinite"></div>
-      <div class="aurora-blob h-[34rem] w-[34rem] bg-citron" style="bottom:-14rem;right:-4rem;animation:aurora 22s ease-in-out infinite reverse;opacity:0.16"></div>
-    </div>
-    <!-- Réseau de neurones -->
-    <div class="absolute inset-0 -z-10" data-parallax="0.15">
-      <NeuralBg client:load />
-    </div>
-
-    <div class="wrap relative flex flex-col items-center py-24 text-center sm:py-32" data-hero>
+    <div class="wrap relative flex flex-col items-center pt-12 pb-24 text-center sm:pt-14 sm:pb-32" data-hero>
       <!-- Photo de profil -->
-      <div class="mb-7 overflow-visible" data-hero-el>
+      <div class="mb-6" data-hero-el>
         {
           SITE.photo ? (
-            <img
-              src={SITE.photo}
-              alt={SITE.name}
-              width="88"
-              height="88"
-              class="h-22 w-22 rounded-full border-2 border-accent-bright/50 object-cover shadow-lg shadow-accent/20"
-              style="width:88px;height:88px;animation:float-y 6s ease-in-out infinite"
-            />
+            <span class="photo-shine" style="animation:float-y 6s ease-in-out infinite">
+              <img
+                src={SITE.photo}
+                alt={SITE.name}
+                width="168"
+                height="168"
+                class="block rounded-full border-2 border-accent-bright/50 object-cover shadow-lg shadow-accent/20"
+                style="width:168px;height:168px"
+              />
+            </span>
           ) : (
             <span
-              class="grid h-22 w-22 place-items-center rounded-full border-2 border-accent-bright/50 bg-surface font-mono text-2xl font-bold text-fg shadow-lg shadow-accent/20"
-              style="width:88px;height:88px;animation:float-y 6s ease-in-out infinite"
+              class="photo-shine grid place-items-center rounded-full border-2 border-accent-bright/50 bg-surface font-mono text-3xl font-bold text-fg shadow-lg shadow-accent/20"
+              style="width:168px;height:168px;animation:float-y 6s ease-in-out infinite"
               title="Ajoutez votre photo : SITE.photo dans src/config/site.ts"
             >
               IB
@@ -74,22 +68,23 @@ const SOFT: Record<string, string> = {
       </div>
 
       <p class="mb-4 font-mono text-xs uppercase tracking-[0.3em] text-muted" data-hero-el>
-        Bonjour, je suis
+        Bonjour, bienvenue sur mon site
       </p>
       <h1 class="text-5xl font-black leading-[0.95] tracking-tight sm:text-7xl" data-hero-el>
         Ivan Bosso
       </h1>
       <p class="mt-4 flex h-9 items-center justify-center text-2xl font-bold sm:h-11 sm:text-4xl" data-hero-el>
-        <span data-roles class="role-rotator font-mono"></span>
+        <span class="mr-2 font-mono text-fg">Je suis</span><span data-roles class="role-rotator font-mono"></span><span class="caret" aria-hidden="true"></span>
       </p>
       <p class="mt-7 max-w-3xl text-xl font-semibold leading-snug sm:text-2xl" data-hero-el>
-        Je transforme un <span class="text-accent-bright">problème métier</span> en
-        <span class="accent-word">valeur mesurée</span>.
+        J'optimise vos process grâce à <span class="text-accent-bright">l'IA et vos données</span>,
+        je vous débarrasse des tâches répétitives, et vous <span class="accent-word">gagnez du temps</span>.
       </p>
       <p class="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg" data-hero-el>
-        J'aide les entreprises à transformer une idée en un produit
-        <strong class="font-semibold text-fg">data ou IA réellement en production</strong> : utile, fiable et mesuré.
-        De la première intuition jusqu'au déploiement, avec une seule obsession, la valeur livrée.
+        Ingénieur Data / IA, je conçois des solutions de <strong class="font-semibold text-fg">machine learning, de LLM et d'IA générative</strong>
+        qui passent vraiment en production : RAG, fine-tuning, automatisation.
+        Du data engineering au développement full-stack, je couvre toute la chaîne pour transformer vos données
+        et vos process en résultats concrets, à grande échelle.
       </p>
 
       <div class="mt-9 flex flex-wrap items-center justify-center gap-3" data-hero-el>
@@ -113,14 +108,18 @@ const SOFT: Record<string, string> = {
   </section>
 
   <!-- ░░ PILIERS (générique, intemporel) ░░ -->
-  <section class="wrap -mt-6">
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+  <section class="wrap mt-16">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">// Ce sur quoi vous pouvez compter</p>
+      <h2 class="mt-3 text-2xl font-bold sm:text-3xl">Concrètement, ce que je vous apporte</h2>
+      <p class="mt-3 text-muted">
+        En mission comme au sein de votre équipe : des outils qui servent vraiment, et un impact que vous pouvez chiffrer.
+      </p>
+    </div>
+    <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {
         pillars.map((p, i) => (
-          <div
-            class="anim rounded-xl border border-line/70 bg-surface/40 p-5 transition-colors hover:border-accent-bright/50"
-            style={`animation-delay:${1.5 + i * 0.12}s`}
-          >
+          <div class:list={['glass reveal rounded-xl p-5', i % 2 ? 'r-up' : 'r-scale']} data-tilt>
             <span class:list={['block h-1 w-9 rounded-full', BG[p.c]]} />
             <p class="mt-3 text-lg font-bold text-fg">{p.k}</p>
             <p class="mt-1 text-sm leading-relaxed text-muted">{p.v}</p>
@@ -135,27 +134,28 @@ const SOFT: Record<string, string> = {
     <div class="reveal flex items-end justify-between">
       <div>
         <h2 class="text-2xl font-bold sm:text-3xl">Projets phares</h2>
-        <p class="mt-2 text-muted">Du problème métier à la valeur livrée, projet par projet.</p>
+        <p class="mt-2 text-muted">Des cas concrets : le problème, ce que j’ai fait, ce que ça a changé.</p>
       </div>
       <a href="/portfolio" class="hidden text-sm text-accent-bright hover:underline sm:block">Tout voir →</a>
     </div>
 
     <div class="mt-8 grid gap-5 sm:grid-cols-2">
-      {featured.map((p) => <ProjectCard project={p} />)}
+      {featured.map((p, i) => <ProjectCard project={p} variant={i % 2 ? 'r-right' : 'r-left'} />)}
     </div>
   </section>
 
   <!-- ░░ POURQUOI MOI ░░ -->
   <section class="wrap mt-28">
     <div class="reveal">
-      <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">// Pourquoi moi</p>
-      <h2 class="mt-3 text-2xl font-bold sm:text-3xl">Pourquoi travailler avec moi&nbsp;?</h2>
+      <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">// Ma façon de travailler</p>
+      <h2 class="mt-3 text-2xl font-bold sm:text-3xl">L’humain avant l’outil</h2>
+      <p class="mt-3 max-w-2xl text-muted">Au-delà de la technique, ma conviction : l’IA est un levier, pas un but. Je m’en sers pour créer de la valeur, là où elle a du sens.</p>
     </div>
     <div class="mt-8 grid gap-4 sm:grid-cols-2">
       {
-        why.map((w) => (
-          <div class="reveal flex gap-4 rounded-xl border border-line/70 bg-surface/40 p-6 transition-colors hover:border-accent-bright/40">
-            <span class:list={['grid h-12 w-12 shrink-0 place-items-center rounded-lg text-2xl', SOFT[w.c]]}>{w.icon}</span>
+        why.map((w, i) => (
+          <div class:list={['glass reveal flex gap-4 rounded-xl p-6', i % 2 ? 'r-right' : 'r-left']} data-tilt>
+            <span class:list={['grid h-12 w-12 shrink-0 place-items-center rounded-lg', SOFT[w.c]]}><Icon name={w.icon} size={24} /></span>
             <div>
               <h3 class:list={['text-lg font-bold', TXT[w.c]]}>{w.title}</h3>
               <p class="mt-1.5 text-sm leading-relaxed text-muted">{w.desc}</p>
@@ -190,20 +190,20 @@ const SOFT: Record<string, string> = {
     <div class="absolute inset-0 -z-10 bg-gradient-to-b from-base/70 via-base/55 to-base/85"></div>
 
     <div class="wrap">
-      <p class="reveal mx-auto max-w-4xl text-center text-2xl font-bold leading-snug tracking-tight sm:text-[2.7rem] sm:leading-[1.2]">
-        <span class="quote-grad">« La valeur n'est pas dans l'appel au modèle, mais dans tout ce qui le rend fiable, mesuré et reproductible. »</span>
+      <p class="reveal r-scale mx-auto max-w-4xl text-center text-2xl font-bold leading-snug tracking-tight sm:text-[2.7rem] sm:leading-[1.2]">
+        <span class="quote-grad" data-quote>« La perfection est atteinte non quand il n'y a plus rien à ajouter, mais quand il n'y a plus rien à retrancher. »</span>
       </p>
-      <p class="reveal mt-7 text-center font-mono text-sm text-muted">Ivan Bosso, ma façon de travailler</p>
+      <p class="reveal mt-7 text-center font-mono text-sm text-muted" data-quote-who>Antoine de Saint-Exupéry</p>
     </div>
   </section>
 
   <!-- ░░ CTA FINAL ░░ -->
   <section class="wrap mt-24">
     <div
-      class="reveal relative overflow-hidden rounded-2xl border border-line/70 bg-gradient-to-br from-surface to-base p-10 text-center sm:p-14"
+      class="glass reveal r-scale relative overflow-hidden rounded-2xl p-10 text-center sm:p-14"
     >
-      <h2 class="text-2xl font-bold sm:text-3xl">Un problème data ou IA à mettre en production ?</h2>
-      <p class="mx-auto mt-3 max-w-xl text-muted">Discutons-en. Du POC à la mise en production, avec des résultats mesurés.</p>
+      <h2 class="text-2xl font-bold sm:text-3xl">Un process qui vous prend trop de temps&nbsp;?</h2>
+      <p class="mx-auto mt-3 max-w-xl text-muted">Dites-moi lequel. On regarde ensemble ce que l’IA peut y changer.</p>
       <a
         href="/contact"
         class="mt-7 inline-block rounded-md bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-bright"
