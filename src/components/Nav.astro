@@ -1,16 +1,24 @@
 ---
+import { getLocale, localizePath } from '../i18n/config';
+import { t } from '../i18n/ui';
+import LangSwitcher from './LangSwitcher.astro';
+
+const locale = getLocale(Astro.url);
+const T = t(locale);
+const home = localizePath('/', locale);
+
 // NB : /services reste accessible par lien direct, mais n'est pas dans le menu principal.
 const links = [
-  { href: '/portfolio', label: 'Portfolio' },
-  { href: '/cv', label: 'CV' },
-  { href: '/contact', label: 'Contact' },
+  { href: localizePath('/portfolio', locale), label: T.nav.portfolio },
+  { href: localizePath('/cv', locale), label: T.nav.cv },
+  { href: localizePath('/contact', locale), label: T.nav.contact },
 ];
 const path = Astro.url.pathname;
 ---
 
 <header class="sticky top-0 z-50 border-b border-line/60 bg-base/70 backdrop-blur-md">
   <nav class="wrap flex h-16 items-center justify-between">
-    <a href="/" class="group flex items-center gap-2 font-mono text-sm font-semibold tracking-tight">
+    <a href={home} class="group flex items-center gap-2 font-mono text-sm font-semibold tracking-tight">
       <span
         class="grid h-8 w-8 place-items-center rounded-md bg-accent text-white transition-colors group-hover:bg-accent-bright"
         >IB</span
@@ -25,7 +33,7 @@ const path = Astro.url.pathname;
             href={l.href}
             class:list={[
               'text-sm transition-colors hover:text-fg',
-              path.startsWith(l.href) ? 'text-fg' : 'text-muted',
+              path === l.href || (l.href !== home && path.startsWith(l.href)) ? 'text-fg' : 'text-muted',
             ]}
           >
             {l.label}
@@ -33,12 +41,16 @@ const path = Astro.url.pathname;
         ))
       }
       <a
-        href="/contact"
+        href={localizePath('/contact', locale)}
         class="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-bright"
-        >Me contacter</a
+        >{T.nav.cta}</a
       >
+      <LangSwitcher />
     </div>
 
-    <a href="/portfolio" class="text-sm text-muted hover:text-fg md:hidden">Menu</a>
+    <div class="flex items-center gap-3 md:hidden">
+      <LangSwitcher />
+      <a href={localizePath('/portfolio', locale)} class="text-sm text-muted hover:text-fg">{T.nav.menu}</a>
+    </div>
   </nav>
 </header>

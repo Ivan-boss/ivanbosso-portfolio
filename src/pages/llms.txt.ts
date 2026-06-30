@@ -1,11 +1,11 @@
 import type { APIRoute } from 'astro';
 import { SITE } from '../config/site';
-import { PROJECTS } from '../data/projects';
+import { getProjects } from '../data/projects';
 
 // llms.txt : résumé structuré lisible par les moteurs IA (ChatGPT, Perplexity, Claude…).
 // Convention llmstxt.org — généré depuis les données du site (source unique).
 export const GET: APIRoute = () => {
-  const projLines = PROJECTS.map(
+  const projLines = getProjects('fr').map(
     (p) => `- [${p.client} — ${p.title}](${new URL('/portfolio/' + p.slug, SITE.url).href}) : ${p.task}`
   ).join('\n');
 

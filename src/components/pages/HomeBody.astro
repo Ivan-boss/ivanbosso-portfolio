@@ -1,0 +1,195 @@
+---
+import Base from '../../layouts/Base.astro';
+import FlowNarrative from '../FlowNarrative.astro';
+import ProjectCard from '../ProjectCard.astro';
+import TechStack from '../TechStack.astro';
+import CodeCard from '../CodeCard.astro';
+import Icon from '../Icon.astro';
+import { getProjects } from '../../data/projects';
+import { SITE } from '../../config/site';
+import { getLocale, localizePath } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+import { PILLARS, WHY } from '../../i18n/content';
+
+const locale = getLocale(Astro.url);
+const T = t(locale).home;
+const pillars = PILLARS[locale];
+const why = WHY[locale];
+const featured = getProjects(locale).filter((p) => p.featured);
+
+// heroSub : on met en gras le segment « heroSubStrong » à l'intérieur du paragraphe.
+const [subBefore, subAfter] = T.heroSub.split(T.heroSubStrong);
+
+// maps couleur → classes littérales (pour que Tailwind les génère)
+const BG: Record<string, string> = { 'accent-bright': 'bg-accent-bright', citron: 'bg-citron' };
+const TXT: Record<string, string> = { 'accent-bright': 'text-accent-bright', citron: 'text-citron' };
+const SOFT: Record<string, string> = {
+  'accent-bright': 'bg-accent-bright/10 text-accent-bright',
+  citron: 'bg-citron/15 text-citron',
+};
+---
+
+<Base>
+  <!-- ░░ HERO ░░ -->
+  <section class="relative overflow-hidden">
+    <div class="wrap relative flex flex-col items-center pt-12 pb-24 text-center sm:pt-14 sm:pb-32" data-hero>
+      <!-- Photo de profil -->
+      <div class="mb-6" data-hero-el>
+        {
+          SITE.photo ? (
+            <span class="photo-shine" style="animation:float-y 6s ease-in-out infinite">
+              <img
+                src={SITE.photo}
+                alt={SITE.name}
+                width="168"
+                height="168"
+                class="block rounded-full border-2 border-accent-bright/50 object-cover shadow-lg shadow-accent/20"
+                style="width:168px;height:168px"
+              />
+            </span>
+          ) : (
+            <span
+              class="photo-shine grid place-items-center rounded-full border-2 border-accent-bright/50 bg-surface font-mono text-3xl font-bold text-fg shadow-lg shadow-accent/20"
+              style="width:168px;height:168px;animation:float-y 6s ease-in-out infinite"
+            >
+              IB
+            </span>
+          )
+        }
+      </div>
+
+      <p class="mb-4 font-mono text-xs uppercase tracking-[0.3em] text-muted" data-hero-el>
+        {T.heroEyebrow}
+      </p>
+      <h1 class="text-5xl font-black leading-[0.95] tracking-tight sm:text-7xl" data-hero-el>
+        Ivan Bosso
+      </h1>
+      <p class="mt-4 flex h-9 items-center justify-center text-2xl font-bold sm:h-11 sm:text-4xl" data-hero-el>
+        <span class="mr-2 font-mono text-fg">{T.heroIam}</span><span data-roles class="role-rotator font-mono"></span><span class="caret" aria-hidden="true"></span>
+      </p>
+      <p class="mt-7 max-w-3xl text-xl font-semibold leading-snug sm:text-2xl" data-hero-el>
+        {T.heroLead.map((seg) => (seg.cls ? <span class={seg.cls}>{seg.t}</span> : <span>{seg.t}</span>))}
+      </p>
+      <p class="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg" data-hero-el>
+        {subBefore}<strong class="font-semibold text-fg">{T.heroSubStrong}</strong>{subAfter}
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-3" data-hero-el>
+        <a
+          href={localizePath('/portfolio', locale)}
+          class="group relative overflow-hidden rounded-md bg-accent px-6 py-3 font-semibold text-white transition-all hover:bg-accent-bright hover:shadow-lg hover:shadow-accent/30"
+          >{T.ctaProjects}</a
+        >
+        <a
+          href={localizePath('/cv', locale)}
+          class="rounded-md border border-line px-6 py-3 font-semibold text-fg transition-colors hover:border-accent-bright hover:text-accent-bright"
+          >{T.ctaCv}</a
+        >
+      </div>
+
+      <!-- Le fil conducteur -->
+      <div class="mt-16 w-full" data-hero-el>
+        <FlowNarrative intro={true} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ PILIERS (générique, intemporel) ░░ -->
+  <section class="wrap mt-16">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">{T.pillarsEyebrow}</p>
+      <h2 class="mt-3 text-2xl font-bold sm:text-3xl">{T.pillarsTitle}</h2>
+      <p class="mt-3 text-muted">{T.pillarsSub}</p>
+    </div>
+    <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        pillars.map((p, i) => (
+          <div class:list={['glass reveal rounded-xl p-5', i % 2 ? 'r-up' : 'r-scale']} data-tilt>
+            <span class:list={['block h-1 w-9 rounded-full', BG[p.c]]} />
+            <p class="mt-3 text-lg font-bold text-fg">{p.k}</p>
+            <p class="mt-1 text-sm leading-relaxed text-muted">{p.v}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ░░ PROJETS ░░ -->
+  <section class="wrap mt-24">
+    <div class="reveal flex items-end justify-between">
+      <div>
+        <h2 class="text-2xl font-bold sm:text-3xl">{T.projectsTitle}</h2>
+        <p class="mt-2 text-muted">{T.projectsSub}</p>
+      </div>
+      <a href={localizePath('/portfolio', locale)} class="hidden text-sm text-accent-bright hover:underline sm:block">{T.seeAll}</a>
+    </div>
+
+    <div class="mt-8 grid gap-5 sm:grid-cols-2">
+      {featured.map((p, i) => <ProjectCard project={p} variant={i % 2 ? 'r-right' : 'r-left'} />)}
+    </div>
+  </section>
+
+  <!-- ░░ POURQUOI MOI ░░ -->
+  <section class="wrap mt-28">
+    <div class="reveal">
+      <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">{T.whyEyebrow}</p>
+      <h2 class="mt-3 text-2xl font-bold sm:text-3xl">{T.whyTitle}</h2>
+      <p class="mt-3 max-w-2xl text-muted">{T.whySub}</p>
+    </div>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2">
+      {
+        why.map((w, i) => (
+          <div class:list={['glass reveal flex gap-4 rounded-xl p-6', i % 2 ? 'r-right' : 'r-left']} data-tilt>
+            <span class:list={['grid h-12 w-12 shrink-0 place-items-center rounded-lg', SOFT[w.c]]}><Icon name={w.icon} size={24} /></span>
+            <div>
+              <h3 class:list={['text-lg font-bold', TXT[w.c]]}>{w.title}</h3>
+              <p class="mt-1.5 text-sm leading-relaxed text-muted">{w.desc}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ░░ EN QUELQUES LIGNES (code Shiki) ░░ -->
+  <CodeCard />
+
+  <!-- ░░ STACK TECHNIQUE ░░ -->
+  <TechStack />
+
+  <!-- ░░ BANDEAU « MOTS SUR IMAGE » (citation) ░░ -->
+  <section class="relative mt-28 flex min-h-[60vh] items-center overflow-hidden py-20 sm:py-28">
+    {
+      SITE.bandImage ? (
+        <div
+          class="absolute inset-0 -z-20 bg-cover bg-center"
+          style={`background-image:url('${SITE.bandImage}')`}
+          data-parallax="0.08"
+        />
+      ) : (
+        <div class="mesh-bg absolute inset-0 -z-20" data-parallax="0.08" />
+      )
+    }
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-base/70 via-base/55 to-base/85"></div>
+
+    <div class="wrap">
+      <p class="reveal r-scale mx-auto max-w-4xl text-center text-2xl font-bold leading-snug tracking-tight sm:text-[2.7rem] sm:leading-[1.2]">
+        <span class="quote-grad" data-quote>{T.quoteText}</span>
+      </p>
+      <p class="reveal mt-7 text-center font-mono text-sm text-muted" data-quote-who>{T.quoteWho}</p>
+    </div>
+  </section>
+
+  <!-- ░░ CTA FINAL ░░ -->
+  <section class="wrap mt-24">
+    <div class="glass reveal r-scale relative overflow-hidden rounded-2xl p-10 text-center sm:p-14">
+      <h2 class="text-2xl font-bold sm:text-3xl">{T.ctaTitle}</h2>
+      <p class="mx-auto mt-3 max-w-xl text-muted">{T.ctaSub}</p>
+      <a
+        href={localizePath('/contact', locale)}
+        class="mt-7 inline-block rounded-md bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-bright"
+        >{T.ctaBtn}</a
+      >
+    </div>
+  </section>
+</Base>

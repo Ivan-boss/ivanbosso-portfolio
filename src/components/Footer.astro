@@ -1,5 +1,9 @@
 ---
 import { SITE } from '../config/site';
+import { getLocale, localizePath } from '../i18n/config';
+import { t } from '../i18n/ui';
+const locale = getLocale(Astro.url);
+const T = t(locale);
 const year = 2026;
 ---
 
@@ -7,13 +11,13 @@ const year = 2026;
   <div class="wrap flex flex-col gap-6 py-10 sm:flex-row sm:items-center sm:justify-between">
     <div>
       <p class="font-mono text-sm text-fg">{SITE.name}</p>
-      <p class="text-sm text-muted">{SITE.role} · {SITE.location}</p>
+      <p class="text-sm text-muted">{T.meta.jobTitle} · {SITE.location}</p>
     </div>
     <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
       <a class="transition-colors hover:text-accent-bright" href={SITE.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
       {SITE.github && <a class="transition-colors hover:text-accent-bright" href={SITE.github} target="_blank" rel="noopener">GitHub ↗</a>}
-      <a class="transition-colors hover:text-accent-bright" href={`mailto:${SITE.email}`}>Email</a>
-      <a class="transition-colors hover:text-fg" href="/cv">CV</a>
+      <a class="transition-colors hover:text-accent-bright" href={`mailto:${SITE.email}`}>{T.footer.email}</a>
+      <a class="transition-colors hover:text-fg" href={localizePath('/cv', locale)}>{T.footer.cv}</a>
       <span class="text-muted/60">© {year}</span>
     </div>
   </div>

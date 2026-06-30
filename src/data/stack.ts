@@ -3,8 +3,22 @@
 // icon = nom d'icône (src/components/Icon.astro) ; c = couleur d'accent du bloc.
 
 // slug = simple-icons ; logo = chemin local (override, ex. /logos/x.svg) si pas de slug officiel.
+import type { Locale } from '../i18n/config';
 export type Tool = { name: string; slug: string; logo?: string };
 export type StackGroup = { group: string; icon: string; c: 'accent-bright' | 'citron'; items: Tool[] };
+
+// Noms de groupes traduits (les items = noms d'outils, non traduits).
+const GROUP_LABEL: Record<string, Record<Locale, string>> = {
+  cpu: { fr: 'IA / ML', en: 'AI / ML' },
+  database: { fr: 'Backend & Data', en: 'Backend & Data' },
+  cloud: { fr: 'Cloud & DevOps', en: 'Cloud & DevOps' },
+  code: { fr: 'Dev & IA augmentée', en: 'Dev & AI-augmented' },
+};
+
+/** Stack avec les noms de groupes dans la langue demandée. */
+export function getStack(locale: Locale): StackGroup[] {
+  return STACK.map((g) => ({ ...g, group: GROUP_LABEL[g.icon]?.[locale] ?? g.group }));
+}
 
 export const STACK: StackGroup[] = [
   {

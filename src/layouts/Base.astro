@@ -8,6 +8,11 @@ import NeuralBg3D from '../components/NeuralBg3D.tsx';
 import ShaderBg from '../components/ShaderBg.tsx';
 import { ClientRouter } from 'astro:transitions';
 import { SITE } from '../config/site';
+import { getLocale, alternatePath } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+const locale = getLocale(Astro.url);
+const T = t(locale);
 
 interface Props {
   title?: string;
@@ -16,8 +21,8 @@ interface Props {
   jsonLd?: object | object[];
 }
 const {
-  title = 'Ivan Bosso · Ingénieur Data / IA',
-  description = "Ingénieur Data/IA à Nantes. J'aide les entreprises à automatiser leurs tâches et intégrer l'IA dans leurs process, pour gagner du temps et fiabiliser leurs décisions.",
+  title = T.meta.defaultTitle,
+  description = T.meta.defaultDesc,
   image,
   jsonLd,
 } = Astro.props;
@@ -26,12 +31,19 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogPath = image || SITE.ogImage;
 const ogImage = ogPath ? new URL(ogPath, SITE.url).href : undefined;
 
+// Liens alternés (hreflang) pour le SEO multilingue.
+const frHref = new URL(alternatePath(Astro.url, 'fr'), SITE.url).href;
+const enHref = new URL(alternatePath(Astro.url, 'en'), SITE.url).href;
+const ogLocale = locale === 'en' ? 'en_US' : 'fr_FR';
+const ogLocaleAlt = locale === 'en' ? 'fr_FR' : 'en_US';
+const htmlLang = locale === 'en' ? 'en' : 'fr';
+
 // Données structurées (GEO/AI-SEO) : Person + WebSite globaux + JSON-LD de page
 const personLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: SITE.name,
-  jobTitle: 'Ingénieur Data / IA',
+  jobTitle: T.meta.jobTitle,
   url: SITE.url,
   email: `mailto:${SITE.email}`,
   address: { '@type': 'PostalAddress', addressLocality: 'Nantes', addressCountry: 'FR' },
@@ -48,19 +60,23 @@ const allLd = [personLd, websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang={htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="fr" href={frHref} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="x-default" href={frHref} />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Ivan Bosso" />
-    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlt} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -82,12 +98,47 @@ const allLd = [personLd, websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd
     <Analytics />
     <ClientRouter />
     <script is:inline>
+      // ── Détection auto de la langue (1re visite uniquement) ───────────
+      // Redirige FR → /en SI le navigateur préfère l'anglais ET qu'aucun
+      // choix explicite n'a été mémorisé. Jamais EN → FR (FR = défaut).
+      (function () {
+        try {
+          var KEY = 'ib-lang';
+          var p = location.pathname;
+          var isEN = p === '/en' || p.indexOf('/en/') === 0;
+          var stored = null;
+          try { stored = localStorage.getItem(KEY); } catch (e) {}
+          var redirected = false;
+          try { redirected = sessionStorage.getItem('ib-redirected') === '1'; } catch (e) {}
+          if (!stored && !redirected && !isEN) {
+            var langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ''];
+            var prefersEN = langs.length && String(langs[0]).toLowerCase().indexOf('en') === 0;
+            if (prefersEN) {
+              try { sessionStorage.setItem('ib-redirected', '1'); } catch (e) {}
+              location.replace('/en' + (p === '/' ? '/' : p) + location.search + location.hash);
+            }
+          }
+        } catch (e) {}
+      })();
+      // ── Mémorise le choix explicite de langue (clic sur le drapeau) ───
+      (function () {
+        if (window.__ibLangBound) return;
+        window.__ibLangBound = true;
+        document.addEventListener('click', function (e) {
+          var a = e.target && e.target.closest ? e.target.closest('[data-lang-link]') : null;
+          if (a) { try { localStorage.setItem('ib-lang', a.getAttribute('data-lang-link')); } catch (_) {} }
+        });
+      })();
       // reload → toujours revenir en haut (pas de restauration de scroll)
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-      // loader UNIQUEMENT sur la home ; masqué ailleurs ou si reduced-motion
-      if (location.pathname !== '/' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('loader-seen');
-      }
+      // loader UNIQUEMENT sur la home (FR « / » ou EN « /en/ ») ; masqué ailleurs ou si reduced-motion
+      (function () {
+        var p = location.pathname;
+        var isHome = p === '/' || p === '/en' || p === '/en/';
+        if (!isHome || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('loader-seen');
+        }
+      })();
     </script>
   </head>
   <body class="text-fg min-h-screen antialiased">
@@ -107,8 +158,8 @@ const allLd = [personLd, websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd
     <!-- Écran de chargement (1×/session, sortie rapide, reduced-motion safe) -->
     <div id="ib-loader" aria-hidden="true">
       <div>
-        <p class="ib-hello">L'<span class="ib-accent">humain</span> d'abord, l'IA ensuite.</p>
-        <p class="ib-sub">Installez-vous, ça arrive.</p>
+        <p class="ib-hello">{T.loader.pre}<span class="ib-accent">{T.loader.accent}</span>{T.loader.post}</p>
+        <p class="ib-sub">{T.loader.sub}</p>
         <div class="ib-bar"><span></span></div>
       </div>
     </div>

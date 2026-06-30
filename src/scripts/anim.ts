@@ -4,29 +4,26 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
+import { ROLES as ROLES_I18N, QUOTES as QUOTES_I18N } from '../i18n/content';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 let roleTimer: number | undefined;
 
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const ROLES = ['Ingénieur Data / IA', 'Data Scientist', 'Consultant IA', 'AI / LLM Engineer', 'Data Analyst', 'Développeur augmenté'];
+/** Langue courante, lue sur <html lang> (mise à jour à chaque navigation). */
+const docLang = (): 'fr' | 'en' => (document.documentElement.lang === 'en' ? 'en' : 'fr');
 
 // Citation du bandeau. Index 0 = signature d'Ivan : tirage ALÉATOIRE, mais on ne
 // commence JAMAIS par la sienne (toujours un auteur en premier), et jamais deux
 // fois la même d'affilée. Sa signature peut tomber au hasard sur les vues suivantes.
-const QUOTES: { text: string; who: string }[] = [
-  { text: "« La valeur n'est pas dans l'appel au modèle, mais dans tout ce qui rend le résultat fiable, mesurable et reproductible. »", who: 'Ivan Bosso, ma façon de travailler' },
-  { text: "« La perfection est atteinte non quand il n'y a plus rien à ajouter, mais quand il n'y a plus rien à retrancher. »", who: 'Antoine de Saint-Exupéry' },
-  { text: "« La science accumule le savoir plus vite que la société n'accumule la sagesse. »", who: 'Isaac Asimov' },
-  { text: '« La simplicité est un prérequis de la fiabilité. »', who: 'Edsger Dijkstra' },
-];
 
 /** Bandeau citation : tirage aléatoire, jamais la signature d'Ivan en première position. */
 function rotateQuote() {
   const el = document.querySelector<HTMLElement>('[data-quote]');
   const who = document.querySelector<HTMLElement>('[data-quote-who]');
   if (!el || !who) return; // pas sur la home
+  const QUOTES = QUOTES_I18N[docLang()];
   let last = -1;
   let started = false;
   try {
@@ -94,6 +91,7 @@ function heroIntro() {
 function startRoles() {
   const el = document.querySelector<HTMLElement>('[data-roles]');
   if (!el) return;
+  const ROLES = ROLES_I18N[docLang()];
   if (roleTimer) window.clearTimeout(roleTimer);
   if (reduce) {
     el.textContent = ROLES[0];
@@ -197,7 +195,7 @@ function counters() {
       ease: 'power2.out',
       scrollTrigger: { trigger: el, start: 'top 90%' },
       onUpdate: () => {
-        el.textContent = prefix + Math.round(obj.n).toLocaleString('fr-FR') + suffix;
+        el.textContent = prefix + Math.round(obj.n).toLocaleString(docLang() === 'en' ? 'en-US' : 'fr-FR') + suffix;
       },
     });
   });

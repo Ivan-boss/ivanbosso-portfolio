@@ -1,32 +1,21 @@
 ---
 import { Code } from 'astro:components';
+import { getLocale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import { CODE_SNIPPET } from '../i18n/content';
 
 // Coloration syntaxique Shiki au BUILD = zéro JS client. Signature « ingénieur ».
-const snippet = `class IvanBosso:
-    role      = "Ingénieur Data / IA"
-    expertise = ["ML", "LLM", "RAG", "fine-tuning"]
-    je_fais   = "intégrer l'IA dans vos process"
-    je_livre  = [
-        "du temps gagné",
-        "des décisions fiables",
-        "un résultat chiffré",
-    ]
-    obsession = "votre résultat, pas la hype"
-
-    def collaborer(self) -> str:
-        return "parlons de votre besoin"
-`;
+const locale = getLocale(Astro.url);
+const T = t(locale).home;
+const snippet = CODE_SNIPPET[locale];
 ---
 
 <section class="wrap mt-24">
   <div class="grid items-center gap-10 lg:grid-cols-2">
     <div class="reveal r-left">
-      <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">// whoami</p>
-      <h2 class="mt-3 text-2xl font-bold sm:text-3xl">En clair</h2>
-      <p class="mt-4 max-w-md leading-relaxed text-muted">
-        Je pars de votre besoin, je conçois la solution, je la déploie, et je mesure ce qu’elle vous
-        fait gagner. La technologie n’est qu’un moyen.
-      </p>
+      <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">{T.whoamiEyebrow}</p>
+      <h2 class="mt-3 text-2xl font-bold sm:text-3xl">{T.whoamiTitle}</h2>
+      <p class="mt-4 max-w-md leading-relaxed text-muted">{T.whoamiBody}</p>
     </div>
 
     <div

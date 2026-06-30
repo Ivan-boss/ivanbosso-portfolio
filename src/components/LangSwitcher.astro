@@ -1,0 +1,39 @@
+---
+import { getLocale, alternatePath } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+const locale = getLocale(Astro.url);
+const T = t(locale);
+const frHref = alternatePath(Astro.url, 'fr');
+const enHref = alternatePath(Astro.url, 'en');
+
+// data-lang-link = mémorise le choix explicite (localStorage) → désactive la détection auto.
+const item = 'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold transition-colors';
+const on = 'bg-accent/15 text-fg';
+const off = 'text-muted hover:text-fg';
+---
+
+<div class="flex items-center gap-0.5 rounded-lg border border-line/60 bg-base/40 p-0.5" role="group" aria-label={T.lang.label}>
+  <a
+    href={frHref}
+    hreflang="fr"
+    lang="fr"
+    data-lang-link="fr"
+    aria-current={locale === 'fr' ? 'true' : undefined}
+    class:list={[item, locale === 'fr' ? on : off]}
+    title={T.lang.toFR}
+  >
+    <span aria-hidden="true">🇫🇷</span><span>FR</span>
+  </a>
+  <a
+    href={enHref}
+    hreflang="en"
+    lang="en"
+    data-lang-link="en"
+    aria-current={locale === 'en' ? 'true' : undefined}
+    class:list={[item, locale === 'en' ? on : off]}
+    title={T.lang.toEN}
+  >
+    <span aria-hidden="true">🇬🇧</span><span>EN</span>
+  </a>
+</div>

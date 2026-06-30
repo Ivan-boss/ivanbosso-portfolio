@@ -1,0 +1,103 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import { getCvPath } from '../../utils/cv';
+import { getLocale } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+import { CV_SKILLS } from '../../i18n/content';
+
+const locale = getLocale(Astro.url);
+const T = t(locale).cv;
+const cvPath = getCvPath(locale);
+const skills = CV_SKILLS[locale];
+
+const title = locale === 'en' ? 'Résumé · Ivan Bosso' : 'CV · Ivan Bosso';
+const desc =
+  locale === 'en'
+    ? "Ivan Bosso's résumé, Data/AI Engineer in Nantes, France: LLM/RAG/NLP skills, data engineering, MLOps, full-stack, and a Polytech Nantes engineering degree. Downloadable as PDF."
+    : "CV d'Ivan Bosso, ingénieur Data/IA à Nantes : compétences LLM/RAG/NLP, data engineering, MLOps, full-stack, et formation Polytech Nantes. Téléchargeable en PDF.";
+
+const SOFT: Record<string, string> = {
+  'accent-bright': 'bg-accent-bright/10 text-accent-bright',
+  citron: 'bg-citron/15 text-citron',
+};
+---
+
+<Base title={title} description={desc}>
+  <section class="wrap pt-16 sm:pt-20">
+    <p class="reveal font-mono text-sm text-accent-bright">{T.eyebrow}</p>
+    <div class="reveal mt-3 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-3xl font-black tracking-tight sm:text-5xl">Ivan Bosso</h1>
+        <p class="mt-2 text-lg text-muted">{T.subtitle}</p>
+      </div>
+      {
+        cvPath ? (
+          <a
+            href={cvPath}
+            download
+            class="cta-pulse inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-center font-semibold text-white transition-colors hover:bg-accent-bright"
+          >
+            <Icon name="rocket" size={18} />
+            {T.download}
+          </a>
+        ) : (
+          <span class="inline-block cursor-not-allowed rounded-md border border-line px-6 py-3 text-center font-semibold text-muted">
+            {T.soon}
+          </span>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="wrap mt-12">
+    <h2 class="reveal text-xl font-bold">{T.skillsTitle}</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      {
+        skills.map((s) => (
+          <div class="reveal glass rounded-xl p-5">
+            <h3 class="flex items-center gap-2.5 font-mono text-sm font-semibold text-fg">
+              <span class:list={['grid h-8 w-8 shrink-0 place-items-center rounded-lg', SOFT[s.c]]}>
+                <Icon name={s.icon} size={18} />
+              </span>
+              {s.group}
+            </h3>
+            <div class="mt-3 flex flex-wrap gap-2">
+              {s.items.map((it) => (
+                <span class="rounded-md bg-base px-2.5 py-1 text-sm text-fg/90">{it}</span>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap mt-16">
+    <h2 class="reveal text-xl font-bold">{T.educationTitle}</h2>
+    <ul class="reveal mt-4 flex flex-col gap-4 text-fg/90">
+      <li>
+        <a
+          href="https://polytech.univ-nantes.fr"
+          target="_blank"
+          rel="noopener"
+          class="group inline-flex items-center gap-3 rounded-lg transition-colors hover:text-accent-bright"
+        >
+          <img
+            src="/logos/polytech.png"
+            alt="Polytech Nantes"
+            width="44"
+            height="44"
+            class="h-11 w-11 rounded-md bg-white/90 p-1 shadow-sm transition-transform group-hover:scale-105"
+            onerror="this.remove()"
+          />
+          <span class="text-lg font-semibold sm:text-xl">
+            <strong class="text-fg group-hover:text-accent-bright">Polytech Nantes</strong>, {T.polytech}
+            <span class="text-muted">· 2023-2026</span>
+            <span class="ml-0.5 text-sm text-accent-bright opacity-0 transition-opacity group-hover:opacity-100">↗</span>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+</Base>

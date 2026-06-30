@@ -1,12 +1,16 @@
 ---
 import type { Project } from '../data/projects';
 import ClientLogo from './ClientLogo.astro';
+import { getLocale, localizePath } from '../i18n/config';
+import { t } from '../i18n/ui';
 interface Props { project: Project; variant?: string }
 const { project, variant = '' } = Astro.props;
+const locale = getLocale(Astro.url);
+const T = t(locale).caseStudy;
 ---
 
 <a
-  href={`/portfolio/${project.slug}`}
+  href={localizePath(`/portfolio/${project.slug}`, locale)}
   data-tilt
   class:list={['glass reveal group relative flex flex-col gap-5 rounded-xl p-6', variant]}
 >
@@ -16,7 +20,7 @@ const { project, variant = '' } = Astro.props;
       <ClientLogo client={project.client} monogram={project.monogram} logo={project.logo} website={project.website} size={44} />
       <div>
         <p class="text-sm font-semibold text-fg">{project.client}</p>
-        <p class="text-xs text-muted">{project.domain === 'IA' ? 'IA appliquée' : 'Data'}</p>
+        <p class="text-xs text-muted">{project.domain === 'IA' ? T.cardAppliedAI : T.cardData}</p>
       </div>
     </div>
     <span
@@ -42,7 +46,7 @@ const { project, variant = '' } = Astro.props;
       <p class="text-xs text-muted">{project.headline.label}</p>
     </div>
     <span class="flex items-center gap-1 text-sm text-accent-bright opacity-0 transition-opacity group-hover:opacity-100">
-      Étude de cas
+      {T.cardCta}
       <span class="transition-transform group-hover:translate-x-1">→</span>
     </span>
   </div>

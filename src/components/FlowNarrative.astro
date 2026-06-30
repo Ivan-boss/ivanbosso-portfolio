@@ -1,7 +1,9 @@
 ---
-import { FLOW } from '../data/projects';
+import { getFlow } from '../data/projects';
+import { getLocale } from '../i18n/config';
 interface Props { intro?: boolean }
 const { intro = false } = Astro.props;
+const FLOW = getFlow(getLocale(Astro.url));
 // délai de base : laisse le hero se révéler avant d'allumer le fil
 const base = intro ? 1.5 : 0;
 ---

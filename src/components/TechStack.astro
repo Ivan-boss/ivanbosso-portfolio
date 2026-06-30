@@ -1,6 +1,11 @@
 ---
-import { STACK } from '../data/stack';
+import { getStack } from '../data/stack';
 import Icon from './Icon.astro';
+import { getLocale } from '../i18n/config';
+import { t } from '../i18n/ui';
+const locale = getLocale(Astro.url);
+const T = t(locale).home;
+const STACK = getStack(locale);
 // Logos via simple-icons CDN (couleur de marque). Pour du 100% local/offline plus tard :
 // télécharger les SVG dans public/logos/ et remplacer la source ci-dessous.
 const logoUrl = (slug: string) => `https://cdn.simpleicons.org/${slug}`;
@@ -12,9 +17,9 @@ const SOFT: Record<string, string> = {
 
 <section class="wrap mt-24">
   <div class="reveal">
-    <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">// Stack technique</p>
-    <h2 class="mt-3 text-2xl font-bold sm:text-3xl">Les outils du quotidien</h2>
-    <p class="mt-2 text-muted">Ce avec quoi je conçois, entraîne, déploie et observe.</p>
+    <p class="font-mono text-xs uppercase tracking-[0.25em] text-muted">{T.stackEyebrow}</p>
+    <h2 class="mt-3 text-2xl font-bold sm:text-3xl">{T.stackTitle}</h2>
+    <p class="mt-2 text-muted">{T.stackSub}</p>
   </div>
 
   <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

@@ -9,6 +9,12 @@ import { SITE } from './src/config/site.ts';
 // https://astro.build
 export default defineConfig({
   site: SITE.url,
+  // FR par défaut à la racine (/), EN sous /en/ — pas de préfixe pour la langue par défaut.
+  i18n: {
+    locales: ['fr', 'en'],
+    defaultLocale: 'fr',
+    routing: { prefixDefaultLocale: false },
+  },
   integrations: [react(), sitemap()],
   vite: {
     plugins: [tailwindcss()],

@@ -1,0 +1,65 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../ProjectCard.astro';
+import ClientLogo from '../ClientLogo.astro';
+import { getProjects, getSecondary } from '../../data/projects';
+import { getLocale } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+
+const locale = getLocale(Astro.url);
+const T = t(locale).portfolio;
+const PROJECTS = getProjects(locale);
+const SECONDARY = getSecondary(locale);
+
+const title = 'Portfolio · Ivan Bosso';
+const desc =
+  locale === 'en'
+    ? 'Data & AI case studies by Ivan Bosso: LLM document extraction, classification at scale, unsupervised NLP, multi-source scoring. Real missions, from business problem to delivered value.'
+    : "Études de cas data & IA d'Ivan Bosso : extraction documentaire par LLM, classification à l'échelle, NLP non supervisé, scoring multi-sources. Des missions réelles, du problème métier à la valeur livrée.";
+---
+
+<Base title={title} description={desc}>
+  <section class="wrap pt-16 sm:pt-20">
+    <p class="reveal font-mono text-sm text-accent-bright">{T.eyebrow}</p>
+    <h1 class="reveal mt-3 text-3xl font-black tracking-tight sm:text-5xl">{T.h1}</h1>
+    <p class="reveal mt-4 max-w-2xl text-lg text-muted">{T.intro}</p>
+  </section>
+
+  <section class="wrap mt-12">
+    <div class="grid gap-5 sm:grid-cols-2">
+      {PROJECTS.map((p, i) => <ProjectCard project={p} variant={i % 2 ? 'r-right' : 'r-left'} />)}
+    </div>
+  </section>
+
+  <!-- Secondaires -->
+  <section class="wrap mt-20">
+    <h2 class="reveal text-xl font-bold">{T.secondaryTitle}</h2>
+    <p class="reveal mt-1 text-sm text-muted">{T.secondarySub}</p>
+    <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        SECONDARY.map((s, i) => (
+          <div class:list={['glass reveal rounded-lg p-5', i % 3 === 0 ? 'r-left' : i % 3 === 1 ? 'r-scale' : 'r-right']} data-tilt>
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <ClientLogo client={s.client} monogram={s.monogram} logo={s.logo} website={s.website} link={true} size={30} />
+                {s.website ? (
+                  <a href={s.website} target="_blank" rel="noopener" class="font-semibold text-fg transition-colors hover:text-accent-bright">
+                    {s.client} <span class="text-xs text-muted">↗</span>
+                  </a>
+                ) : (
+                  <p class="font-semibold text-fg">{s.client}</p>
+                )}
+              </div>
+              <div class="flex shrink-0 gap-1.5">
+                {s.tags.map((tag) => (
+                  <span class="rounded-full bg-base px-2 py-0.5 font-mono text-[10px] text-muted">{tag}</span>
+                ))}
+              </div>
+            </div>
+            <p class="mt-2 text-sm leading-relaxed text-muted">{s.task}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Base>
