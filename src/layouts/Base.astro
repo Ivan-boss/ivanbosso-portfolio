@@ -56,6 +56,8 @@ const allLd = [personLd, websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd
     <link rel="canonical" href={canonical} />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {/* Photo du hero = élément LCP : on la charge en priorité, avant les fonds WebGL. */}
+    {SITE.photo && <link rel="preload" as="image" href={SITE.photo} fetchpriority="high" />}
 
     <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website" />
@@ -121,18 +123,27 @@ const allLd = [personLd, websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd
         html.style.overflow = 'hidden';
         var ready = 0;
         var exited = false;
-        var MIN = 900; // le « bonjour » s'affiche au moins ce temps
+        // Le loader reste affiché le temps que SES PROPRES animations finissent
+        // (sous-titre 1,25 s, barre de progression 1,3 s — cf. global.css).
+        var MIN = 1800;
+        // Avance donnée au hero : il s'anime EN COULISSES pendant ce délai, si
+        // bien que le rideau se lève sur une photo et un texte déjà en place.
+        var LEAD = 350;
         var start = Date.now();
         function exit() {
           if (exited) return;
           exited = true;
-          var wait = Math.max(0, MIN - (Date.now() - start));
+          // On calcule l'instant du hero, puis on cale le rideau LEAD ms après :
+          // l'avance est ainsi garantie même sur machine lente (bg-ready tardif).
+          var heroAt = Math.max(0, MIN - (Date.now() - start) - LEAD);
           window.setTimeout(function () {
-            el.classList.add('ib-done'); // animation de sortie
+            window.dispatchEvent(new Event('loader-done')); // 1) le hero entre, caché
+          }, heroAt);
+          window.setTimeout(function () {
+            el.classList.add('ib-done'); // 2) le rideau se lève sur la page prête
             html.style.overflow = '';
-            window.dispatchEvent(new Event('loader-done'));
             window.setTimeout(function () { html.classList.add('loader-seen'); }, 700);
-          }, wait);
+          }, heroAt + LEAD);
         }
         // attend que les 2 fonds (shader + réseau 3D) aient rendu leur 1re image
         window.addEventListener('bg-ready', function () {

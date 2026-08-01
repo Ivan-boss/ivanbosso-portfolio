@@ -28,7 +28,8 @@ export const SITE = {
 
   // Photo de profil (déposer le fichier dans public/, ex. public/ivan.jpg).
   // Laisser vide pour afficher le monogramme « IB » à la place.
-  photo: '/ivan.png',
+  // Format WebP 336×336 (2× le rendu 168px) : 9 Ko, pour un affichage immédiat.
+  photo: '/ivan.webp',
 
   // Image de fond du bandeau « citation » (déposer dans public/, ex. /band.jpg).
   // Laisser vide = fond dégradé « mesh » généré (aucune image requise).
