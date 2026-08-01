@@ -66,15 +66,17 @@ function heroIntro() {
   const play = () => {
     if (played) return;
     played = true;
-    gsap.set(others, { opacity: 0, y: 44 });
-    const tl = gsap.timeline({ delay: 0.1 });
+    // Cadence serrée : l'entrée se joue derrière le rideau du loader (350 ms
+    // d'avance + 600 ms de clip-path). Tout doit être en place avant la levée.
+    gsap.set(others, { opacity: 0, y: 24 });
+    const tl = gsap.timeline();
     if (h1) {
       gsap.set(h1, { opacity: 1, y: 0 });
       const split = new SplitText(h1, { type: 'chars' });
       gsap.set(split.chars, { opacity: 0, yPercent: 130 });
-      tl.to(split.chars, { opacity: 1, yPercent: 0, stagger: 0.035, duration: 0.7, ease: 'back.out(1.7)' }, 0);
+      tl.to(split.chars, { opacity: 1, yPercent: 0, stagger: 0.025, duration: 0.5, ease: 'back.out(1.7)' }, 0);
     }
-    tl.to(others, { opacity: 1, y: 0, stagger: 0.12, duration: 0.9, ease: 'power3.out' }, 0.2);
+    tl.to(others, { opacity: 1, y: 0, stagger: 0.05, duration: 0.5, ease: 'power3.out' }, 0.05);
     tl.add(startRoles, '-=0.2');
   };
 
