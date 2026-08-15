@@ -80,12 +80,16 @@ function heroIntro() {
     tl.add(startRoles, '-=0.2');
   };
 
-  // le hero démarre quand le loader s'en va ; sinon (pas de loader) tout de suite
-  if (document.documentElement.classList.contains('loader-seen')) {
+  // Le hero démarre quand le loader s'en va ; sinon (pas de loader, ou loader
+  // déjà parti avant que ce script soit exécuté) tout de suite.
+  // `__ibLoaderDone` est un DRAPEAU, pas seulement un événement : sans lui, un
+  // script chargé après le dispatch ratait l'événement et attendait le garde-fou.
+  const w = window as Window & { __ibLoaderDone?: boolean };
+  if (w.__ibLoaderDone || document.documentElement.classList.contains('loader-seen')) {
     play();
   } else {
     window.addEventListener('loader-done', play, { once: true });
-    window.setTimeout(play, 7500); // garde-fou
+    window.setTimeout(play, 3000); // garde-fou
   }
 }
 
@@ -307,8 +311,12 @@ function run() {
   periodicShine();
 }
 
+/** Le moteur a-t-il déjà tourné pour le document actuellement affiché ? */
+let ranForPage = false;
+
 // Nettoyage avant chaque transition de page (ClientRouter)
 function cleanup() {
+  ranForPage = false;
   ScrollTrigger.getAll().forEach((t) => t.kill());
   if (shineTimer) {
     window.clearInterval(shineTimer);
@@ -326,5 +334,23 @@ document.addEventListener('astro:before-swap', (e) => {
   cleanup();
 });
 
-// astro:page-load se déclenche au 1er chargement ET à chaque navigation
-document.addEventListener('astro:page-load', run);
+// ⚠️ Au PREMIER chargement, `astro:page-load` du ClientRouter est câblé sur
+// window « load » : il n'arrive qu'une fois TOUTES les ressources téléchargées
+// (three.js ~490 ko, polices Google, logos…). Comme `[data-hero-el]` est à
+// opacity:0 en CSS, le hero restait invisible jusque-là. On démarre donc dès
+// que le DOM est prêt, et `astro:page-load` ne sert plus qu'aux navigations.
+function boot() {
+  if (ranForPage) return;
+  ranForPage = true;
+  run();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot, { once: true });
+} else {
+  boot();
+}
+document.addEventListener('astro:page-load', boot);
+
+// Les positions des ScrollTrigger sont calculées avant que images et polices
+// soient posées : on recalcule une fois tout chargé.
+window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });

@@ -14,7 +14,11 @@ export const SITE = {
   url: 'https://ivanbosso.com',
 
   // Contact
-  email: 'dboss.ivan@gmail.com',
+  // Alias public, redirigé vers la boîte perso via Cloudflare Email Routing.
+  // Jetable : s'il se fait spammer, on le supprime et on en recrée un autre —
+  // l'adresse personnelle n'apparaît nulle part sur le site.
+  // ⚠️ Réception uniquement : les réponses partent depuis la boîte perso.
+  email: 'contact@ivanbosso.com',
   // Numéro volontairement retiré du site public (le code est inspectable).
   // Ligne pro à venir : remettre la vraie valeur ici quand prête, puis
   // réafficher la carte téléphone (voir src/pages/contact.astro).

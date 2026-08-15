@@ -188,6 +188,8 @@ const allLd = [personLd, websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd
           // l'avance est ainsi garantie même sur machine lente (bg-ready tardif).
           var heroAt = Math.max(0, MIN - (Date.now() - start) - LEAD);
           window.setTimeout(function () {
+            // drapeau + événement : le moteur d'anim peut arriver APRÈS le dispatch
+            window.__ibLoaderDone = true;
             window.dispatchEvent(new Event('loader-done')); // 1) le hero entre, caché
           }, heroAt);
           window.setTimeout(function () {
@@ -201,7 +203,63 @@ const allLd = [personLd, websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd
           ready++;
           if (ready >= 2) exit();
         });
-        window.setTimeout(exit, 7000); // garde-fou (WebGL indisponible)
+        // Garde-fou : le rideau ne doit JAMAIS attendre three.js (~490 ko) sur
+        // une connexion lente. Passé ce délai on lève, les fonds arrivent après.
+        window.setTimeout(exit, 2500);
+      })();
+    </script>
+
+    <script is:inline>
+      // ── Filet de sécurité affichage ───────────────────────────────────
+      // `[data-hero-el]` et `.reveal` sont à opacity:0 en CSS et c'est GSAP qui
+      // les révèle. Si le moteur d'anim n'arrive pas (réseau, bloqueur, erreur
+      // JS), le contenu doit quand même s'afficher plutôt que rester invisible.
+      window.setTimeout(function () {
+        var show = function (el) {
+          if (getComputedStyle(el).opacity === '0') {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+          }
+        };
+        Array.prototype.forEach.call(document.querySelectorAll('[data-hero-el]'), show);
+        Array.prototype.forEach.call(document.querySelectorAll('.reveal'), function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.top < window.innerHeight) show(el); // seulement ce qui est déjà à l'écran
+        });
+      }, 3500);
+
+      // ── Cloudflare « Email Address Obfuscation » ──────────────────────
+      // Cloudflare (Scrape Shield) réécrit les mailto: en /cdn-cgi/l/email-protection
+      // + un <span class="__cf_email__">[email protected]</span>, décodé par un script
+      // maison. Ce script est souvent bloqué (uBlock, DNS filtrant) ou arrive en
+      // retard → l'adresse reste affichée « [email protected] ». On décode nous-mêmes.
+      // ⚠️ Le vrai correctif est de DÉSACTIVER l'option dans le dashboard Cloudflare.
+      (function () {
+        function dec(hex) {
+          var key = parseInt(hex.substr(0, 2), 16);
+          var out = '';
+          for (var i = 2; i < hex.length; i += 2) {
+            out += String.fromCharCode(parseInt(hex.substr(i, 2), 16) ^ key);
+          }
+          return decodeURIComponent(escape(out));
+        }
+        function unprotect() {
+          Array.prototype.forEach.call(document.querySelectorAll('.__cf_email__'), function (el) {
+            var h = el.getAttribute('data-cfemail');
+            if (!h) return;
+            try { el.parentNode.replaceChild(document.createTextNode(dec(h)), el); } catch (e) {}
+          });
+          Array.prototype.forEach.call(
+            document.querySelectorAll('a[href*="/cdn-cgi/l/email-protection#"]'),
+            function (a) {
+              var h = a.getAttribute('href').split('#')[1];
+              try { a.setAttribute('href', 'mailto:' + dec(h)); } catch (e) {}
+            }
+          );
+        }
+        unprotect();
+        document.addEventListener('DOMContentLoaded', unprotect);
+        document.addEventListener('astro:page-load', unprotect);
       })();
     </script>
 
