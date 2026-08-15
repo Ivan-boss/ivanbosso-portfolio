@@ -8,7 +8,13 @@ const frHref = alternatePath(Astro.url, 'fr');
 const enHref = alternatePath(Astro.url, 'en');
 
 // data-lang-link = mémorise le choix explicite (localStorage) → désactive la détection auto.
-const item = 'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold transition-colors';
+//
+// ⚠️ Drapeaux en SVG, PAS en emoji (🇫🇷 / 🇬🇧) : Windows n'affiche AUCUN emoji
+// drapeau — Segoe UI Emoji ne les embarque pas. Chrome y retombe sur les deux
+// lettres d'indicateur régional, donc « FR » et « GB » en texte brut. Les SVG
+// s'affichent partout à l'identique et pèsent quelques octets.
+const flag = 'h-3 w-[1.125rem] shrink-0 rounded-[2px] shadow-sm ring-1 ring-black/20';
+const item = 'flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-semibold transition-colors';
 const on = 'bg-accent/15 text-fg';
 const off = 'text-muted hover:text-fg';
 ---
@@ -23,7 +29,11 @@ const off = 'text-muted hover:text-fg';
     class:list={[item, locale === 'fr' ? on : off]}
     title={T.lang.toFR}
   >
-    <span aria-hidden="true">🇫🇷</span><span>FR</span>
+    <svg class:list={[flag]} viewBox="0 0 3 2" aria-hidden="true" focusable="false">
+      <rect width="3" height="2" fill="#fff"></rect>
+      <rect width="1" height="2" fill="#002654"></rect>
+      <rect x="2" width="1" height="2" fill="#ED2939"></rect>
+    </svg><span>FR</span>
   </a>
   <a
     href={enHref}
@@ -34,6 +44,13 @@ const off = 'text-muted hover:text-fg';
     class:list={[item, locale === 'en' ? on : off]}
     title={T.lang.toEN}
   >
-    <span aria-hidden="true">🇬🇧</span><span>EN</span>
+    <svg class:list={[flag]} viewBox="0 0 60 30" aria-hidden="true" focusable="false">
+      <clipPath id="lsw-uk"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"></path></clipPath>
+      <rect width="60" height="30" fill="#012169"></rect>
+      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"></path>
+      <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#lsw-uk)" stroke="#C8102E" stroke-width="4"></path>
+      <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"></path>
+      <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"></path>
+    </svg><span>EN</span>
   </a>
 </div>

@@ -27,8 +27,7 @@ export const SITE = {
   linkedin: 'https://www.linkedin.com/in/ivan-bosso',
   github: '', // laisser vide pour masquer le lien
 
-  // CV : rien à configurer ici. Déposez n'importe quel PDF dans public/cv/
-  // (le nom n'a aucune importance), il est détecté automatiquement au build.
+  // CV : voir CV_FILES en bas de ce fichier.
 
   // Photo de profil (déposer le fichier dans public/, ex. public/ivan.jpg).
   // Laisser vide pour afficher le monogramme « IB » à la place.
@@ -42,6 +41,22 @@ export const SITE = {
   // Image de partage social (Open Graph), 1200×630, déposée dans public/ (ex. /og.png).
   // Laisser vide = pas de vignette sociale (à ajouter avant la mise en ligne).
   ogImage: '',
+};
+
+// ── CV téléchargeables ──────────────────────────────────────────────
+// Quel PDF de public/cv/ est proposé pour quelle langue. Le nom doit être
+// EXACT (extension comprise), copié depuis public/cv/.
+//
+// ⚠️ Déclaration explicite et volontaire : ne remplacez pas ça par une
+// détection automatique. L'ancienne version triait les PDF par ordre
+// alphabétique, et « CV Développeur » passant avant « CV Ingénieur », le
+// site positionné Data/IA servait le CV dev — sans que rien ne casse.
+// Un fichier déclaré introuvable déclenche un avertissement au build.
+//
+// Ajouter une langue = ajouter une ligne ici, rien d'autre à toucher.
+export const CV_FILES: Record<'fr' | 'en', string> = {
+  fr: 'Ivan Bosso — CV Ingénieur Data _ IA.pdf',
+  en: 'Data_AI-engineer_cv_en_Ivan_BOSSO.pdf',
 };
 
 // ── Statistiques de visite (analytics) ──────────────────────────────
