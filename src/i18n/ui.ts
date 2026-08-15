@@ -20,10 +20,14 @@ export const UI = {
     home: {
       heroEyebrow: 'Bonjour, bienvenue sur mon site',
       heroIam: 'Je suis',
+      // Deux surlignages seulement, en début et en fin : la matière première
+      // (bleu) et le bénéfice (citron) encadrent la phrase. « Faire parler vos
+      // données » reprend volontairement le titre d'une carte Services
+      // (i18n/content.ts) — même formule d'un bout à l'autre du site.
       heroLead: [
-        { t: "J'optimise vos process grâce à " },
-        { t: "l'IA et vos données", cls: 'text-accent-bright' },
-        { t: ', je vous débarrasse des tâches répétitives, et vous ' },
+        { t: 'Je fais ' },
+        { t: 'parler vos données', cls: 'text-accent-bright' },
+        { t: ", j'optimise vos process grâce à l'IA, je vous débarrasse des tâches répétitives, et vous " },
         { t: 'gagnez du temps', cls: 'accent-word' },
         { t: '.' },
       ] as { t: string; cls?: string }[],
@@ -129,10 +133,12 @@ export const UI = {
     home: {
       heroEyebrow: 'Hi, welcome to my site',
       heroIam: "I'm a",
+      // Cf. la version FR : mêmes deux surlignages, et « make your data speak »
+      // reprend le titre de la carte Services correspondante.
       heroLead: [
-        { t: 'I streamline your processes with ' },
-        { t: 'AI and your data', cls: 'text-accent-bright' },
-        { t: ', take repetitive tasks off your plate, and ' },
+        { t: 'I make ' },
+        { t: 'your data speak', cls: 'text-accent-bright' },
+        { t: ', I streamline your processes with AI, take repetitive tasks off your plate, and ' },
         { t: 'give you time back', cls: 'accent-word' },
         { t: '.' },
       ] as { t: string; cls?: string }[],
