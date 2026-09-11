@@ -93,11 +93,11 @@ export const UI = {
     contact: {
       eyebrow: '// Contact',
       h1: 'Discutons',
-      intro: 'Une opportunité, une mission, ou simplement une question sur un projet data/IA ? Écrivez-moi.',
+      intro: 'Ouvert aux nouvelles opportunités. Un poste, un projet, ou simplement une question sur un sujet data/IA ? Écrivez-moi.',
       email: 'Email',
       linkedin: 'LinkedIn',
       phone: 'Téléphone',
-      phoneNote: "Ligne pro bientôt. Joignez-moi par email d'ici là.",
+      phoneNote: "Numéro communiqué par email, pour éviter les robots.",
       location: 'Localisation',
       locationSuffix: 'télétravail ou présentiel',
     },
@@ -105,7 +105,7 @@ export const UI = {
       eyebrow: '// Services',
       h1: 'Travaillons ensemble',
       intro:
-        "En complément de mon poste, j'accompagne des entreprises en freelance pour automatiser leurs tâches et intégrer l'IA dans leur quotidien. Le but est simple : vous faire gagner du temps, pour de vrai.",
+        "J'accompagne des entreprises à automatiser leurs tâches et à intégrer l'IA dans leur quotidien. Le but est simple : vous faire gagner du temps, pour de vrai.",
       cta: 'Parler de votre besoin',
     },
     notFound: {
@@ -150,7 +150,7 @@ export const UI = {
       pillarsEyebrow: '// What you can count on',
       pillarsTitle: 'What I actually bring you',
       pillarsSub:
-        'On a freelance mission or inside your team: tools that genuinely get used, and an impact you can measure.',
+        'On a client mission or inside your team: tools that genuinely get used, and an impact you can measure.',
       projectsTitle: 'Featured projects',
       projectsSub: 'Real cases: the problem, what I did, what changed.',
       seeAll: 'View all →',
@@ -204,11 +204,11 @@ export const UI = {
     contact: {
       eyebrow: '// Contact',
       h1: "Let's talk",
-      intro: 'An opportunity, a project, or just a question about data/AI? Drop me a line.',
+      intro: 'Open to new opportunities. A role, a project, or just a question about data/AI? Drop me a line.',
       email: 'Email',
       linkedin: 'LinkedIn',
       phone: 'Phone',
-      phoneNote: 'Work line coming soon. Reach me by email until then.',
+      phoneNote: 'Number shared by email, to keep the bots out.',
       location: 'Location',
       locationSuffix: 'remote or on-site',
     },
@@ -216,7 +216,7 @@ export const UI = {
       eyebrow: '// Services',
       h1: "Let's work together",
       intro:
-        'Alongside my role, I help companies as a freelancer to automate their work and bring AI into their day-to-day. The goal is simple: save you real time.',
+        'I help companies automate their work and bring AI into their day-to-day. The goal is simple: save you real time.',
       cta: 'Discuss your needs',
     },
     notFound: {

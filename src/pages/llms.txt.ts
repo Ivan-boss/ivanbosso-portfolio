@@ -14,7 +14,7 @@ export const GET: APIRoute = () => {
 > ${SITE.tagline} Basé à ${SITE.location}. Je conçois et déploie en production des solutions data et IA (LLM, RAG, NLP, scoring), du POC au déploiement, avec une obsession pour la valeur métier mesurée.
 
 ## À propos
-Ivan Bosso est ingénieur Data/IA en alternance chez IOD Solutions (cabinet de conseil data & IA), élève-ingénieur à Polytech Nantes. Il met des modèles d'IA en production pour des clients de secteurs variés (industrie, paie/gestion sociale, assurance, immobilier social), avec une exigence de résultats chiffrés, de conformité RGPD et d'observabilité.
+Ivan Bosso est ingénieur Data/IA en cabinet de conseil data & IA (IOD Solutions). Il met des modèles d'IA en production pour des clients de secteurs variés (industrie, paie/gestion sociale, assurance, immobilier social), avec une exigence de résultats chiffrés, de conformité RGPD et d'observabilité.
 
 ## Projets (études de cas)
 ${projLines}
